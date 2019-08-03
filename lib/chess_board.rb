@@ -16,7 +16,9 @@ class ChessBoard
         add_borders_and_columns_to_board
     end
 
-
+    def square(column,row)
+        @object_board[8 - row][column - 1]
+    end
 
     private 
 
