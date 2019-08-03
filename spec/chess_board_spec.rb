@@ -7,7 +7,7 @@ RSpec.describe do
 
     context "#display" do 
         it "returns an empty board" do 
-            expect(@board.display).to eql("1 |   |   |   |   |   |   |   |   |\n2 |   |   |   |   |   |   |   |   |\n3 |   |   |   |   |   |   |   |   |\n4 |   |   |   |   |   |   |   |   |\n5 |   |   |   |   |   |   |   |   |\n6 |   |   |   |   |   |   |   |   |\n7 |   |   |   |   |   |   |   |   |\n8 |   |   |   |   |   |   |   |   |\n  |---|---|---|---|---|---|---|---|\n    A   B   C   D   E   F   G   H   ")
+            expect(@board.display).to eql("8 |   |   |   |   |   |   |   |   |\n7 |   |   |   |   |   |   |   |   |\n6 |   |   |   |   |   |   |   |   |\n5 |   |   |   |   |   |   |   |   |\n4 |   |   |   |   |   |   |   |   |\n3 |   |   |   |   |   |   |   |   |\n2 |   |   |   |   |   |   |   |   |\n1 |   |   |   |   |   |   |   |   |\n  |---|---|---|---|---|---|---|---|\n    A   B   C   D   E   F   G   H   ")
         end
     end
 end
