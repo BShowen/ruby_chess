@@ -1,13 +1,13 @@
 class Node
 
-    attr_accessor :character
+    attr_accessor :piece
 
     def initialize 
-        @character = nil
+        @piece = nil
     end
 
     def empty?
-        @character == nil
+        @piece == nil
     end
 
 end
