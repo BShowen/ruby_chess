@@ -28,28 +28,28 @@ class ChessBoard
 
     private 
     def set_game_pieces
-        square(0,7).piece = Rook.new
-        square(1,7).piece = Knight.new
-        square(2,7).piece = Bishop.new
-        square(3,7).piece = King.new
-        square(4,7).piece = Queen.new
-        square(5,7).piece = Bishop.new
-        square(6,7).piece = Knight.new
-        square(7,7).piece = Rook.new
+        square(0,7).piece = Rook.new("r","white")
+        square(1,7).piece = Knight.new("k","white")
+        square(2,7).piece = Bishop.new("b","white")
+        square(3,7).piece = King.new("K","white")
+        square(4,7).piece = Queen.new("q","white")
+        square(5,7).piece = Bishop.new("b","white")
+        square(6,7).piece = Knight.new("k","white")
+        square(7,7).piece = Rook.new("r","white")
         for column in 0..7 do 
-            square(column,6).piece = Pawn.new
+            square(column,6).piece = Pawn.new("p","white")
         end
 
-        square(0,0).piece = Rook.new
-        square(1,0).piece = Knight.new
-        square(2,0).piece = Bishop.new
-        square(3,0).piece = King.new
-        square(4,0).piece = Queen.new
-        square(5,0).piece = Bishop.new
-        square(6,0).piece = Knight.new
-        square(7,0).piece = Rook.new
+        square(0,0).piece = Rook.new("r","black")
+        square(1,0).piece = Knight.new("k","black")
+        square(2,0).piece = Bishop.new("b","black")
+        square(3,0).piece = King.new("K","black")
+        square(4,0).piece = Queen.new("q","black")
+        square(5,0).piece = Bishop.new("b","black")
+        square(6,0).piece = Knight.new("k","black")
+        square(7,0).piece = Rook.new("r","black")
         for column in 0..7 do 
-            square(column,1).piece = Pawn.new
+            square(column,1).piece = Pawn.new("p","black")
         end
 
     end
