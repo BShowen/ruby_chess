@@ -23,33 +23,33 @@ class ChessBoard
     end
 
     def square(column,row)
-        @object_board[8 - row][column - 1]
+        @object_board[7 - row][column]
     end
 
     private 
     def set_game_pieces
-        square(1,8).piece = Rook.new
-        square(2,8).piece = Knight.new
-        square(3,8).piece = Bishop.new
-        square(4,8).piece = King.new
-        square(5,8).piece = Queen.new
-        square(6,8).piece = Bishop.new
-        square(7,8).piece = Knight.new
-        square(8,8).piece = Rook.new
-        for column in 1..8 do 
-            square(column,7).piece = Pawn.new
+        square(0,7).piece = Rook.new
+        square(1,7).piece = Knight.new
+        square(2,7).piece = Bishop.new
+        square(3,7).piece = King.new
+        square(4,7).piece = Queen.new
+        square(5,7).piece = Bishop.new
+        square(6,7).piece = Knight.new
+        square(7,7).piece = Rook.new
+        for column in 0..7 do 
+            square(column,6).piece = Pawn.new
         end
 
-        square(1,1).piece = Rook.new
-        square(2,1).piece = Knight.new
-        square(3,1).piece = Bishop.new
-        square(4,1).piece = King.new
-        square(5,1).piece = Queen.new
-        square(6,1).piece = Bishop.new
-        square(7,1).piece = Knight.new
-        square(8,1).piece = Rook.new
-        for column in 1..8 do 
-            square(column,2).piece = Pawn.new
+        square(0,0).piece = Rook.new
+        square(1,0).piece = Knight.new
+        square(2,0).piece = Bishop.new
+        square(3,0).piece = King.new
+        square(4,0).piece = Queen.new
+        square(5,0).piece = Bishop.new
+        square(6,0).piece = Knight.new
+        square(7,0).piece = Rook.new
+        for column in 0..7 do 
+            square(column,1).piece = Pawn.new
         end
 
     end
@@ -67,10 +67,10 @@ class ChessBoard
     end
 
     def add_borders_and_columns_to_board
-        @display_board.map!.with_index(1) do |row,index|
-            "#{9 - index} | #{row.join(" | ")} |\n"
+        @display_board.map!.with_index do |row,index|
+            "#{7 - index} | #{row.join(" | ")} |\n"
         end
-        bottom_row = ["  |---|---|---|---|---|---|---|---|\n    A   B   C   D   E   F   G   H   "]
+        bottom_row = ["  |---|---|---|---|---|---|---|---|\n    0   1   2   3   4   5   6   7   "]
         @display_board << bottom_row
         @display_board.join
     end 
