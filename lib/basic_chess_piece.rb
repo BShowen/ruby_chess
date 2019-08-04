@@ -8,6 +8,11 @@ class BasicChessPiece
         @adjacency_list = build_adj_list
     end
 
+    def legal_move?(current_coordinates, desired_coordinates)
+        index = get_index_from_coordinates([current_coordinates])
+        @adjacency_list[index].include?(desired_coordinates)
+    end
+
     def display_adj_list
         @adjacency_list.each do |data|
             puts "#{data}"
