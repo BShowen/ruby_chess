@@ -5,13 +5,15 @@ require_relative "king"
 require_relative "queen"
 require_relative "pawn"
 require_relative "rook"
+require_relative "custom_enumerable"
 
 class ChessBoard
 
+    include CustomEnumerable
     attr_accessor :object_board
 
     def initialize 
-        @object_board = Array.new(8) {Array.new(8){Node.new} }
+        $object_board = Array.new(8) {Array.new(8){Node.new} }
         set_game_pieces
         @display_board = nil
     end
@@ -22,40 +24,42 @@ class ChessBoard
         add_borders_and_columns_to_board
     end
 
-    def square(column,row)
-        @object_board[7 - row][column]
-    end
+    # def square(coordinates_arr)
+    #     row = coordinates_arr[1]
+    #     column = coordinates_arr[0]
+    #     $object_board[7 - row][column]
+    # end
 
     private 
     def set_game_pieces
-        square(0,7).piece = Rook.new("r","white")
-        square(1,7).piece = Knight.new("k","white")
-        square(2,7).piece = Bishop.new("b","white")
-        square(3,7).piece = King.new("K","white")
-        square(4,7).piece = Queen.new("q","white")
-        square(5,7).piece = Bishop.new("b","white")
-        square(6,7).piece = Knight.new("k","white")
-        square(7,7).piece = Rook.new("r","white")
+        square([0,7]).piece = Rook.new("r","white")
+        square([1,7]).piece = Knight.new("k","white")
+        square([2,7]).piece = Bishop.new("b","white")
+        square([3,7]).piece = King.new("K","white")
+        square([4,7]).piece = Queen.new("q","white")
+        square([5,7]).piece = Bishop.new("b","white")
+        square([6,7]).piece = Knight.new("k","white")
+        square([7,7]).piece = Rook.new("r","white")
         for column in 0..7 do 
-            square(column,6).piece = Pawn.new("p","white")
+            square([column,6]).piece = Pawn.new("p","white")
         end
 
-        square(0,0).piece = Rook.new("r","black")
-        square(1,0).piece = Knight.new("k","black")
-        square(2,0).piece = Bishop.new("b","black")
-        square(3,0).piece = King.new("K","black")
-        square(4,0).piece = Queen.new("q","black")
-        square(5,0).piece = Bishop.new("b","black")
-        square(6,0).piece = Knight.new("k","black")
-        square(7,0).piece = Rook.new("r","black")
+        square([0,0]).piece = Rook.new("r","black")
+        square([1,0]).piece = Knight.new("k","black")
+        square([2,0]).piece = Bishop.new("b","black")
+        square([3,0]).piece = King.new("K","black")
+        square([4,0]).piece = Queen.new("q","black")
+        square([5,0]).piece = Bishop.new("b","black")
+        square([6,0]).piece = Knight.new("k","black")
+        square([7,0]).piece = Rook.new("r","black")
         for column in 0..7 do 
-            square(column,1).piece = Pawn.new("p","black")
+            square([column,1]).piece = Pawn.new("p","black")
         end
 
     end
 
     def clone_object_board
-        @display_board = Marshal.load(Marshal.dump(@object_board))
+        @display_board = Marshal.load(Marshal.dump($object_board))
     end
 
     def convert_each_square_to_string
