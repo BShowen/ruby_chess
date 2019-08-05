@@ -1,10 +1,10 @@
 class BasicChessPiece 
-    attr_accessor :character, :adjacency_list, :color
+    attr_accessor :character, :color
 
-    def initialize(character, color)
+    def initialize(character, color, current_position)
         @color = color
         @character = character
-        @adjacency_list = build_adj_list
+        @legal_moves_from_current_pos = get_legal_moves(current_position)
     end
 
     def get_index_from_coordinates(coordinates)
@@ -27,11 +27,5 @@ class BasicChessPiece
             index - 14
         end
     end 
-
-    # def display_adj_list
-    #     @adjacency_list.each do |data|
-    #         puts "#{data}"
-    #     end
-    # end 
 
 end
