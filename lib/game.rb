@@ -13,6 +13,6 @@ class Game
     end
 
     def can_make_move?(current_coordinates, desired_coordinates)
-        legal_move?(current_coordinates,desired_coordinates) && square(desired_coordinates).empty?
+        legal_move?(current_coordinates,desired_coordinates) && @game_board.square(desired_coordinates).empty?
     end
 end 
