@@ -5,15 +5,13 @@ require_relative "king"
 require_relative "queen"
 require_relative "pawn"
 require_relative "rook"
-require_relative "custom_enumerable"
 
 class ChessBoard
 
-    include CustomEnumerable
     attr_accessor :object_board
 
     def initialize 
-        $object_board = Array.new(8) {Array.new(8){Node.new} }
+        @object_board = Array.new(8) {Array.new(8){Node.new} }
         set_game_pieces
         @display_board = nil
     end
@@ -24,11 +22,11 @@ class ChessBoard
         add_borders_and_columns_to_board
     end
 
-    # def square(coordinates_arr)
-    #     row = coordinates_arr[1]
-    #     column = coordinates_arr[0]
-    #     $object_board[7 - row][column]
-    # end
+    def square(coordinates_arr)
+        row = coordinates_arr[1]
+        column = coordinates_arr[0]
+        @object_board[7 - row][column]
+    end
 
     private 
     def set_game_pieces
@@ -59,7 +57,7 @@ class ChessBoard
     end
 
     def clone_object_board
-        @display_board = Marshal.load(Marshal.dump($object_board))
+        @display_board = Marshal.load(Marshal.dump(@object_board))
     end
 
     def convert_each_square_to_string

@@ -1,7 +1,4 @@
-require_relative "custom_enumerable"
-
 class BasicChessPiece 
-    include CustomEnumerable
     attr_accessor :character, :adjacency_list, :color
 
     def initialize(character, color)
@@ -36,5 +33,5 @@ class BasicChessPiece
     #         puts "#{data}"
     #     end
     # end 
-    
+
 end
