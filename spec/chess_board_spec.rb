@@ -1,6 +1,6 @@
 require "./lib/chess_board.rb"
 
-RSpec.describe do 
+RSpec.describe "ChessBoard" do 
     before(:each) do 
         @board = ChessBoard.new
     end
