@@ -1,10 +1,14 @@
+require_relative "custom_enumerable"
+
 class BasicChessPiece 
+    include CustomEnumerable
     attr_accessor :character, :color
 
     def initialize(character, color, current_position)
         @color = color
         @character = character
-        @legal_moves_from_current_pos = get_legal_moves(current_position)
+        @current_position = current_position 
+        # @legal_moves_from_current_pos = get_legal_moves(@current_position)
     end
 
     def get_index_from_coordinates(coordinates)
@@ -27,5 +31,9 @@ class BasicChessPiece
             index - 14
         end
     end 
+
+    def constraints_are_met?(x,y)
+        square([x, y]).empty? == true || square([x, y]).piece.color != self.color
+    end
 
 end
