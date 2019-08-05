@@ -1,5 +1,7 @@
-class BasicChessPiece
+require_relative "custom_enumerable"
 
+class BasicChessPiece 
+    include CustomEnumerable
     attr_accessor :character, :adjacency_list, :color
 
     def initialize(character, color)
@@ -7,17 +9,6 @@ class BasicChessPiece
         @character = character
         @adjacency_list = build_adj_list
     end
-
-    def legal_move?(current_coordinates, desired_coordinates)
-        index = get_index_from_coordinates([current_coordinates])
-        @adjacency_list[index].include?(desired_coordinates)
-    end
-
-    def display_adj_list
-        @adjacency_list.each do |data|
-            puts "#{data}"
-        end
-    end 
 
     def get_index_from_coordinates(coordinates)
         index = coordinates.join.to_i
@@ -40,4 +31,10 @@ class BasicChessPiece
         end
     end 
 
+    # def display_adj_list
+    #     @adjacency_list.each do |data|
+    #         puts "#{data}"
+    #     end
+    # end 
+    
 end
