@@ -1,9 +1,9 @@
 require "./lib/chess_board.rb"
 require "./lib/pawn.rb"
-require "./spec/helper_modules/pawn_helpers.rb"
+require "./spec/helper_modules/helpers.rb"
 
 RSpec.configure do |c|
-    c.include PawnHelpers
+    c.include Helpers
 end
 
 RSpec.describe "White Pawn" do
@@ -61,10 +61,12 @@ RSpec.describe "White Pawn" do
             expect(@pawn.legal_move?([2,3])).to eql(false)
         end
 
-        it "allows pawn move diagonally only to capture opponent" do 
+        it "allows pawn move diagonally to capture opponent" do 
             move_pawn([3,1],[3,5])
             expect(@pawn.legal_move?([4,6])).to eql(true)
-            move_pawn([3,5],[3,1])
+        end
+
+        it "doesnt allow pawn to move diagonally unless its capturing an opponent" do 
             expect(@pawn.legal_move?([4,2])).to eql(false)
         end
     end

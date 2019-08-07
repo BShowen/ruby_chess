@@ -1,9 +1,9 @@
 require "./lib/chess_board.rb"
 require "./lib/king.rb"
-require "./spec/helper_modules/king_helpers.rb"
+require "./spec/helper_modules/helpers.rb"
 
 RSpec.configure do |c|
-    c.include KingHelpers
+    c.include Helpers
 end
 
 RSpec.describe "King" do
@@ -11,14 +11,13 @@ RSpec.describe "King" do
     before(:each) do 
         @chess_board = ChessBoard.new
         @king = @chess_board.square([3,0]).piece
-        move_pawn_out_of_the_kings_way
+        move_pawn([3,1],[3,3])
     end
-    
-    # let(:king) {@chess_board.square([3,0]).piece}
+
 
     context "#legal_move?" do 
         it "returns true for legal move" do
-            place_king_on_row(4)
+            place_piece_on_square(@king, [3,4])
             expect(@king.legal_move?([4,4])).to eql(true)
             expect(@king.legal_move?([2,4])).to eql(true)
         end
@@ -40,7 +39,7 @@ RSpec.describe "King" do
         end
 
         it "allows king to capture opponents" do 
-            place_king_on_row(5)
+            place_piece_on_square(@king, [3,5])
             expect(@king.legal_move?([3,6])).to eql(true)
             expect(@king.legal_move?([4,6])).to eql(true)
             expect(@king.legal_move?([2,6])).to eql(true)

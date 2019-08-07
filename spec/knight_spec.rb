@@ -1,9 +1,9 @@
 require "./lib/chess_board.rb"
 require "./lib/knight.rb"
-require "./spec/helper_modules/knight_helpers.rb"
+require "./spec/helper_modules/helpers.rb"
 
 RSpec.configure do |c|
-    c.include KnightHelpers
+    c.include Helpers
 end
 
 RSpec.describe "Knight" do
@@ -36,12 +36,12 @@ RSpec.describe "Knight" do
         end
 
         it "allows knight to move over opponents" do 
-            place_knight_on_square([4,5])
+            place_piece_on_square(@knight, [4,5])
             expect(@knight.legal_move?([5,7])).to eql(true)
         end
 
         it "allows knight to capture opponents" do 
-            place_knight_on_square([4,5])
+            place_piece_on_square(@knight, [4,5])
             expect(@knight.legal_move?([5,7])).to eql(true)
         end
 

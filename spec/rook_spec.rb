@@ -1,19 +1,17 @@
 require "./lib/chess_board.rb"
 require "./lib/rook.rb"
-require "./spec/helper_modules/rook_helpers.rb"
+require "./spec/helper_modules/helpers.rb"
 
 RSpec.configure do |c|
-    c.include RookHelpers
+    c.include Helpers
 end
 
 RSpec.describe "Rook" do
     before(:each) do
         @chess_board = ChessBoard.new
-        place_rook_on_row(2)
-        @rook = @chess_board.square([0,2]).piece
+        @rook = @chess_board.square([0,0]).piece
+        place_piece_on_square(@rook,[0,2])
     end
-
-    # let(:rook){@chess_board.square([0,2]).piece}
 
     context "#legal_move?" do 
         it "allows rook to make a horizontal move" do 
@@ -47,6 +45,4 @@ RSpec.describe "Rook" do
             expect(@rook.legal_move?([0,6])).to eql(true)            
         end
     end
-
-
 end
