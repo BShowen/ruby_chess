@@ -1,4 +1,8 @@
 module Helpers
+    def display_board
+        puts @chess_board.display
+    end
+
     def move_pawn(current_pos, desired_pos)
         @chess_board.square(desired_pos).piece = @chess_board.square(current_pos).piece
         @chess_board.square(current_pos).piece = nil
