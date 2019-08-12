@@ -1,0 +1,3 @@
+class HumanInputError < StandardError
+    
+end
