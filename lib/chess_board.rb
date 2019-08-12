@@ -68,7 +68,7 @@ class ChessBoard
         @display_board.map!.with_index do |row,index|
             "#{7 - index} | #{row.join(" | ")} |\n"
         end
-        bottom_row = ["  |---|---|---|---|---|---|---|---|\n    0   1   2   3   4   5   6   7   "]
+        bottom_row = ["  |---|---|---|---|---|---|---|---|\n    A   B   C   D   E   F   G   H   "]
         @display_board << bottom_row
         @display_board.join
     end 
