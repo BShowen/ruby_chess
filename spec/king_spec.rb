@@ -17,9 +17,7 @@ RSpec.describe "King" do
 
     context "#legal_move?" do 
         it "returns true for legal move" do
-            place_piece_on_square(@king, [3,4])
-            expect(@king.legal_move?([4,4])).to eql(true)
-            expect(@king.legal_move?([2,4])).to eql(true)
+            expect(@king.legal_move?([3,1])).to eql(true)
         end
 
         it "doesnt allow king to go off the board" do 
@@ -43,6 +41,12 @@ RSpec.describe "King" do
             expect(@king.legal_move?([3,6])).to eql(true)
             expect(@king.legal_move?([4,6])).to eql(true)
             expect(@king.legal_move?([2,6])).to eql(true)
+        end
+
+        it "doesnt allow king to go into check" do 
+            @chess_board.square([4,1]).piece = nil
+            @chess_board.square([4,6]).piece = nil
+            expect(@king.legal_move?([4,1])).to eql(false)
         end
 
     end
