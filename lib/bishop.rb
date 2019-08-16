@@ -2,37 +2,29 @@ require_relative "basic_chess_piece"
 
 class Bishop < BasicChessPiece
 
-    def get_legal_moves(current_coordinates)
-        x = current_coordinates[0]
-        y = current_coordinates[1]   
+    def get_legal_moves
+        x = @current_position[0]
+        y = @current_position[1]
         adj_list = []
 
         for i in 1..7 do 
             break if (x + i > 7 || y + i > 7)
-            adj_list << [x + i, y + i] if (x + i < 8 && y + i < 8) && constraints_are_met?(x + i, y + i)
-            break if constraints_are_met?(x + i, y + i) == false
-            break if square([x + i, y + i]).empty? == false
+            adj_list << [x + i, y + i]
         end
                    
         for i in 1..7 do 
             break if (x - i < 0 || y - i < 0)
-            adj_list << [x - i, y - i] if (x - i >= 0 && y - i >= 0) && constraints_are_met?(x - i, y - i)
-            break if constraints_are_met?(x - i, y - i) == false
-            break if square([x - i, y - i]).empty? == false
+            adj_list << [x - i, y - i]
         end
 
         for i in 1..7 do 
             break if (x + i > 7 || y - i < 0)
-            adj_list << [x + i, y - i] if (x + i < 8 && y - i >= 0) && constraints_are_met?(x + i, y - i) 
-            break if constraints_are_met?(x + i, y - i) == false
-            break if square([x + i, y - i]).empty? == false
+            adj_list << [x + i, y - i]
         end
 
         for i in 1..7 do 
             break if (x - i < 0 || y + i > 7)
-            adj_list << [x - i, y + i] if (x - i >= 0 && y + i < 8) && constraints_are_met?(x - i, y + i)
-            break if constraints_are_met?(x - i, y + i) == false
-            break if square([x - i, y + i]).empty? == false
+            adj_list << [x - i, y + i]
         end
 
         adj_list

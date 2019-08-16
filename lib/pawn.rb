@@ -2,20 +2,28 @@ require_relative "basic_chess_piece"
 
 class Pawn < BasicChessPiece
 
-    def get_legal_moves(current_coordinates)
-        x = current_coordinates[0]
-        y = current_coordinates[1]
-        adj_list = []
-        adj_list << [x, y + 1] if (y + 1 < 8 && self.color == "white") && square_is_empty?([x, y + 1]) 
-        adj_list << [x, y + 2] if (y == 1 && self.color == "white") && square_is_empty?([x, y + 1]) && square_is_empty?([x, y + 2])
-        adj_list << [x + 1, y + 1] if (x + 1 < 8 && y + 1 < 8 && self.color == "white") && diagonal_constraints_are_met?(x + 1, y + 1)
-        adj_list << [x - 1, y + 1] if (x - 1 >= 0 && y + 1 < 8 && self.color == "white") && diagonal_constraints_are_met?(x - 1, y + 1)
+    attr_accessor :moved
+    def initialize(*args_for_super)
+        @moved = false
+        super
+    end
 
-        adj_list << [x, y - 1] if (y - 1 >= 0 && self.color == "black") && square_is_empty?([x, y - 1]) 
-        adj_list << [x, y - 2] if (y == 6 && self.color == "black") && square_is_empty?([x, y - 1]) && square_is_empty?([x, y - 2])
-        adj_list << [x + 1, y - 1] if (x + 1 < 8 && y - 1 >= 0 && self.color == "black") && diagonal_constraints_are_met?(x + 1, y - 1)
-        adj_list << [x - 1, y - 1] if (x - 1 >= 0 && y - 1 >= 0 && self.color == "black") && diagonal_constraints_are_met?(x - 1, y - 1)
-        adj_list
+    def get_legal_moves
+        x = @current_position[0]
+        y = @current_position[1]
+        if @color == "white"
+            adj_list = []
+            adj_list << [x, y + 1] 
+            adj_list << [x, y + 2] if @moved == false
+            adj_list << [x + 1, y + 1]
+            adj_list << [x - 1, y + 1]
+        else
+            adj_list << [x, y - 1]
+            adj_list << [x, y - 2] if @moved == false
+            adj_list << [x + 1, y - 1] 
+            adj_list << [x - 1, y - 1] 
+            adj_list
+        end
     end
 
     private
