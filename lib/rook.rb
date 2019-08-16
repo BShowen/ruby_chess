@@ -31,7 +31,7 @@ class Rook < BasicChessPiece
             break if (y -  i < 0)
             adj_list << [x, y - 1] if (y - 1 >= 0) && constraints_are_met?(x, y - 1)
             break if constraints_are_met?(x, y - 1) == false
-            break if square([x, y - 1]).empty? == false
+            break if square([x, y - i]).empty? == false
         end
 
         adj_list
