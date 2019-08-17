@@ -42,21 +42,4 @@ RSpec.describe "Player" do
             expect{ player.ensure_reply_was_given(" ") }.to raise_error(HumanInputError, "You must type something")    
         end
     end
-
-    context "#is_selected_square_opponents_piece?" do 
-        xit "doesnt allow selection of opponents chess pieces" do 
-            expect{ player.is_selected_square_opponents_piece?([3,7]) }.to raise_error(HumanInputError, "You cannot select opponents pieces")
-        end
-    end
-
-    context "#is_selected_square_blank?" do
-        xit "raises error when human selects a blank square" do
-            expect{ player.is_selected_square_blank?([3,2]) }.to raise_error(HumanInputError, "That square is empty. Select a playing piece")
-        end
-
-        xit "does not raise error when selected square is not blank" do 
-            expect{ player.is_selected_square_blank?([3,1]) }.to_not raise_error
-        end
-    end
-
 end
