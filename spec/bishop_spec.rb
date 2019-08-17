@@ -1,5 +1,5 @@
 require "./lib/chess_board.rb"
-require "./lib/bishop.rb"
+require "./lib/chess_piece_classes/bishop.rb"
 require "./spec/helper_modules/helpers.rb"
 
 RSpec.configure do |c|
@@ -13,51 +13,14 @@ RSpec.describe "Bishop" do
         @bishop = @chess_board.square([2,0]).piece
     end
     
-    context "#legal_move?" do 
-        it "returns true for legal move" do
-            place_piece_on_square(@bishop, [2,4])
-            expect(@bishop.legal_move?([3,5])).to eql(true)
-            expect(@bishop.legal_move?([3,3])).to eql(true)
-            expect(@bishop.legal_move?([0,2])).to eql(true)
-            expect(@bishop.legal_move?([1,5])).to eql(true)
+    context "#get_moves" do 
+        it "white bishop: returns array of possible moves" do
+            expect(@bishop.get_moves).to contain_exactly([3, 1], [4, 2], [5, 3], [6, 4], [7, 5], [1, 1], [0, 2])
         end
 
-        it "doesnt allow bishop to go off the board" do 
-            place_piece_on_square(@bishop, [2,4])
-            expect(@bishop.legal_move?([6,8])).to eql(false)
+        it "black bishop: returns array of possible moves" do 
+            @bishop = @chess_board.square([2,7]).piece
+            expect(@bishop.get_moves).to contain_exactly([1,6],[0,5],[3,6],[4,5],[5,4],[6,3],[7,2])
         end
-
-        it "doesnt allow bishop to move vertically" do 
-            place_piece_on_square(@bishop, [2,4])
-            expect(@bishop.legal_move?([2,3])).to eql(false)
-        end
-
-        it "doesnt allow bishop to move horizontally" do 
-            place_piece_on_square(@bishop, [2,4])
-            expect(@bishop.legal_move?([4,4])).to eql(false)
-        end
-
-        it "doesnt allow bishop to move onto his own pieces" do 
-            place_piece_on_square(@bishop, [2,4])
-            expect(@bishop.legal_move?([5,1])).to eql(false)
-        end
-
-        it "doesnt allow bishop to move over its own pieces" do 
-            place_piece_on_square(@bishop, [2,4])
-            move_pawn([3,1],[3,3])
-            expect(@bishop.legal_move?([4,2])).to eql(false)
-        end
-
-        it "requires bishop to stop on top of opponents pieces" do 
-            place_piece_on_square(@bishop, [2,4])
-            expect(@bishop.legal_move?([5,7])).to eql(false)
-            expect(@bishop.legal_move?([4,6])).to eql(true)
-        end
-
-        it "allows bishop to capture oppnents" do 
-            place_piece_on_square(@bishop, [2,2])
-            expect(@bishop.legal_move?([6,6])).to eql(true)    
-        end
-
     end
 end

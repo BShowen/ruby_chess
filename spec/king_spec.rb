@@ -1,5 +1,5 @@
 require "./lib/chess_board.rb"
-require "./lib/king.rb"
+require "./lib/chess_piece_classes/king.rb"
 require "./spec/helper_modules/helpers.rb"
 
 RSpec.configure do |c|
@@ -11,43 +11,18 @@ RSpec.describe "King" do
     before(:each) do 
         @chess_board = ChessBoard.new
         @king = @chess_board.square([3,0]).piece
-        move_pawn([3,1],[3,3])
     end
 
 
-    context "#legal_move?" do 
-        it "returns true for legal move" do
-            expect(@king.legal_move?([3,1])).to eql(true)
+    context "#get_moves" do 
+        it "white king: returns array of moves the king can make" do
+            place_piece_on_square(@king,[4,4])
+            expect(@king.get_moves).to contain_exactly([5, 4], [3, 4], [4, 5], [4, 3], [5, 5], [3, 5], [5, 3], [3, 3])
         end
 
-        it "doesnt allow king to go off the board" do 
-            expect(@king.legal_move?([2,8])).to eql(false)
+        it "black king: returns array of moves the king can make" do
+            @king = @chess_board.square([3,7]).piece
+            expect(@king.get_moves).to contain_exactly([4,7],[4,6],[3,6],[2,7],[2,6])
         end
-
-        it "doesnt allow king to move more than one space at a time" do 
-            expect(@king.legal_move?([3,2])).to eql(false)
-        end
-
-        it "doesnt allow king to capture his own people" do 
-            expect(@king.legal_move?([4,0])).to eql(false)
-        end
-
-        it "doesnt allow king to move over its own pieces" do 
-            expect(@king.legal_move?([5,2])).to eql(false)
-        end
-
-        it "allows king to capture opponents" do 
-            place_piece_on_square(@king, [3,5])
-            expect(@king.legal_move?([3,6])).to eql(true)
-            expect(@king.legal_move?([4,6])).to eql(true)
-            expect(@king.legal_move?([2,6])).to eql(true)
-        end
-
-        it "doesnt allow king to go into check" do 
-            @chess_board.square([4,1]).piece = nil
-            @chess_board.square([4,6]).piece = nil
-            expect(@king.legal_move?([4,1])).to eql(false)
-        end
-
     end
 end

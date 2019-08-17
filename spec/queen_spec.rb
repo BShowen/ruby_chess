@@ -1,5 +1,5 @@
 require "./lib/chess_board.rb"
-require "./lib/queen.rb"
+require "./lib/chess_piece_classes/queen.rb"
 require "./spec/helper_modules/helpers.rb"
 
 RSpec.configure do |c|
@@ -11,36 +11,16 @@ RSpec.describe "Queen" do
     before(:each) do
         @chess_board = ChessBoard.new
         @queen = @chess_board.square([4,0]).piece
-        # move_pawn_out_of_the_queens_way
-        move_pawn([4,1],[4,3])
     end
     
-    context "#legal_move?" do 
-        it "returns true for legal move" do
-            expect(@queen.legal_move?([4,1])).to eql(true)
+    context "#get_moves" do 
+        it "white queen: returns array of possible moves" do 
+            expect(@queen.get_moves).to contain_exactly([5,0],[6,0],[7,0],[3,0],[2,0],[1,0],[0,0],[4,1],[4,2],[4,3],[4,4],[4,5],[4,6],[4,7],[5,1],[6,2],[7,3],[3,1],[2,2],[1,3],[0,4])
         end
 
-        it "doesnt allow queen to go off the board" do 
-            expect(@queen.legal_move?([4,8])).to eql(false)
+        it "black queen: returns array of possible moves" do 
+            @queen = @chess_board.square([4,7]).piece
+            expect(@queen.get_moves).to contain_exactly([5,7],[6,7],[7,7],[3,7],[2,7],[1,7],[0,7],[4,6],[4,5],[4,4],[4,3],[4,2],[4,1],[4,0],[3,6],[2,5],[1,4],[0,3],[5,6],[6,5],[7,4])
         end
-
-        it "doesnt allow queen to move onto her own people" do 
-            expect(@queen.legal_move?([4,3])).to eql(false)
-        end
-
-        it "doesnt allow queen to move over its own pieces" do 
-            expect(@queen.legal_move?([6,2])).to eql(false)
-            expect(@queen.legal_move?([4,4])).to eql(false)
-            expect(@queen.legal_move?([2,2])).to eql(false)
-        end
-
-        it "allows queen to capture opponents" do 
-            place_piece_on_square(@queen,[4,4])
-            expect(@queen.legal_move?([2,6])).to eql(true)
-            expect(@queen.legal_move?([6,6])).to eql(true)
-            expect(@queen.legal_move?([4,6])).to eql(true)
-        end
-
     end
-
 end

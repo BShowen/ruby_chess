@@ -1,11 +1,12 @@
 class BasicChessPiece 
     
-    attr_accessor :character, :color, :current_position
+    attr_accessor :character, :color, :current_position, :moved
 
     def initialize(character, color, current_position)
         @character = character
         @color = color
         @current_position = current_position 
+        @moved = false
     end
     
     # def constraints_are_met?(x,y)

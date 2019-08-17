@@ -2,7 +2,7 @@ require_relative "basic_chess_piece"
 
 class Bishop < BasicChessPiece
 
-    def get_legal_moves
+    def get_moves
         x = @current_position[0]
         y = @current_position[1]
         adj_list = []
@@ -29,5 +29,4 @@ class Bishop < BasicChessPiece
 
         adj_list
     end
-
 end

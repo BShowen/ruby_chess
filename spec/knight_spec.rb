@@ -1,5 +1,5 @@
 require "./lib/chess_board.rb"
-require "./lib/knight.rb"
+require "./lib/chess_piece_classes/knight.rb"
 require "./spec/helper_modules/helpers.rb"
 
 RSpec.configure do |c|
@@ -10,40 +10,19 @@ RSpec.describe "Knight" do
 
     before(:each) do 
         @chess_board = ChessBoard.new
-        @knight = @chess_board.square([1,0]).piece
+        @white_knight = @chess_board.square([1,0]).piece
+        @black_knight = @chess_board.square([1,7]).piece
     end
 
-    context "#legal_move?" do 
-        it "returns true for legal move" do
-            expect(@knight.legal_move?([2,2])).to eql(true)
-            expect(@knight.legal_move?([0,2])).to eql(true)
+    context "#get_moves" do 
+        it "white kinght: returns array of moves the knight can make" do
+            place_piece_on_square(@white_knight,[4,4])
+            expect(@white_knight.get_moves).to contain_exactly([3,2],[5,2],[6,3],[6,5],[2,3],[2,5],[5,6],[3,6])
         end
 
-        it "doesnt allow knight to go off the board" do 
-            expect(@knight.legal_move?([2,8])).to eql(false)
+        it "black knight: returns array of moves the knight can make" do 
+            expect(@black_knight.get_moves).to contain_exactly([0,5],[2,5],[3,6])
         end
-
-        it "doesnt allow knight to move in a straight line" do 
-            expect(@knight.legal_move?([1,2])).to eql(false)
-        end
-
-        it "doesnt allow knight to move onto his own people" do 
-            expect(@knight.legal_move?([3,1])).to eql(false)
-        end
-
-        it "allows knight to move over its own pieces" do 
-            expect(@knight.legal_move?([2,2])).to eql(true)
-        end
-
-        it "allows knight to move over opponents" do 
-            place_piece_on_square(@knight, [4,5])
-            expect(@knight.legal_move?([5,7])).to eql(true)
-        end
-
-        it "allows knight to capture opponents" do 
-            place_piece_on_square(@knight, [4,5])
-            expect(@knight.legal_move?([5,7])).to eql(true)
-        end
-
+        
     end
 end
