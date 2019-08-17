@@ -8,8 +8,8 @@ module SolicitPlayerMoves
             ensure_reply_was_given(reply)
             x_coordinate = validate_x_coordinate(reply[0])
             y_coordinate = validate_y_coordinate(reply[1])
-            is_selected_square_blank?([x_coordinate,y_coordinate])
-            is_selected_square_opponents_piece?([x_coordinate,y_coordinate])
+            # is_selected_square_blank?([x_coordinate,y_coordinate])
+            # is_selected_square_opponents_piece?([x_coordinate,y_coordinate])
         rescue HumanInputError => e
             puts e.message
             retry 
@@ -18,7 +18,7 @@ module SolicitPlayerMoves
         [x_coordinate,y_coordinate]
     end
 
-    private
+    
     def ensure_reply_was_given(reply)
         raise HumanInputError, "You must type something" if /\w+/.match(reply) == nil
     end
@@ -66,13 +66,13 @@ module SolicitPlayerMoves
         raise HumanInputError, "Y coordinate is out of range" if y_coord < 0 || y_coord > 7
     end
 
-    def is_selected_square_blank?(coordinates)
-       raise HumanInputError, "That square is empty. Select a playing piece" if  square(coordinates).empty? 
-    end
+    # def is_selected_square_blank?(coordinates)
+    #    raise HumanInputError, "That square is empty. Select a playing piece" if  square(coordinates).empty? 
+    # end
 
-    def is_selected_square_opponents_piece?(coordinates)
-        raise HumanInputError, "You cannot select opponents pieces" if square(coordinates).piece.color != @turn 
-    end
+    # def is_selected_square_opponents_piece?(coordinates)
+    #     raise HumanInputError, "You cannot select opponents pieces" if square(coordinates).piece.color != @turn 
+    # end
 
     def toggle_turn
         @turn == "white" ? @turn = "black" : @turn = "white"
