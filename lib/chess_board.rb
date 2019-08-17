@@ -9,7 +9,7 @@ end
 class ChessBoard
     include SetupBoard
     include SolicitPlayerMoves
-    attr_accessor :object_board
+    attr_accessor :object_board, :turn
 
     def initialize
         $object_board = Array.new(8) {Array.new(8){Node.new} }
@@ -30,4 +30,32 @@ class ChessBoard
         column = coordinates[0]
         $object_board[7 - row][column]
     end
+
+    def toggle_turn
+        @turn == "white" ? @turn = "black" : @turn = "white"
+    end
+
+    def move_piece(from_here, to_here)
+        begin
+            selected_square_cannot_be_blank(from_here)
+            selected_square_cannot_be_opponents_piece(from_here)
+        rescue  HumanInputError => e
+            puts e.message
+            false
+        else
+            square(to_here).piece = square(from_here).piece
+            square(from_here).piece = nil
+            toggle_turn
+        end
+    end
+
+    private
+    def selected_square_cannot_be_blank(from_here)
+        raise HumanInputError, "That square is empty. Select a playing piece" if  square(from_here).empty?
+    end
+
+    def selected_square_cannot_be_opponents_piece(from_here)
+        raise HumanInputError, "You cannot select opponents pieces" if square(from_here).piece.color != @turn 
+    end
+
 end
