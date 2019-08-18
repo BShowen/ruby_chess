@@ -5,10 +5,8 @@ class HumanInputError < StandardError
             super("You cannot select opponents pieces")
         when "blank"
             super("That square is empty. Select a playing piece")
-        when"not possible"
-            super("Move is not possible")
         when "illegal"
-            super("That is an illegal move")
+            super("That move is not legal")
         when "blank reply"
             super("You must type something")
         when "invalid x coord"
@@ -21,6 +19,8 @@ class HumanInputError < StandardError
             super("Y coordinate must be a number")
         when "y out of range"
             super("Y coordinate is out of range")
+        when "no moves"
+            super("that piece has no legal moves. Try another piece.")
         end
     end
 end

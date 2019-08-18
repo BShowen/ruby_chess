@@ -1,5 +1,4 @@
 class Node
-
     attr_accessor :piece
 
     def initialize 
@@ -9,5 +8,4 @@ class Node
     def empty?
         @piece == nil
     end
-
 end
