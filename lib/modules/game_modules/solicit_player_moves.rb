@@ -1,19 +1,6 @@
-require_relative "custom_error"
+require "./lib/modules/custom_error"
 module SolicitPlayerMoves
-
-    def solicit_move
-        begin
-            reply = gets.chomp[0..1]
-            ensure_reply_was_given(reply)
-            x_coordinate = validate_x_coordinate(reply[0])
-            y_coordinate = validate_y_coordinate(reply[1])
-        rescue StandardError => e
-            puts e.message
-            retry 
-        end
-        [x_coordinate,y_coordinate]
-    end
-
+    private
     def validate_x_coordinate(x_coord)
         raise HumanInputError.new("invalid x coord") if /\d/.match(x_coord)
         converter = { "a" => 0, "b" => 1, "c" => 2, "d" => 3, "e" => 4, "f" => 5, "g" => 6, "h" => 7}

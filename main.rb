@@ -8,7 +8,7 @@ def pickup_piece
         $selected_piece = $game.solicit_move
         clear_screen
         display_board
-        $board.select_piece($selected_piece, $game.turn)
+        puts $board.select_piece($selected_piece, $game.turn)
     rescue StandardError => e
         puts "entered rescue in main"
         puts e.message

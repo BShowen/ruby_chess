@@ -20,7 +20,7 @@ class HumanInputError < StandardError
         when "y out of range"
             super("Y coordinate is out of range")
         when "no moves"
-            super("that piece has no legal moves. Try another piece.")
+            super("That piece has no legal moves. Try another piece")
         end
     end
 end

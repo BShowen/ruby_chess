@@ -1,5 +1,9 @@
 module SlideMoves
     private
+    def constraints_are_met?(coords)
+        square(coords).empty? == true || square(coords).piece.color != @current_turn_color
+    end
+    
     def ascending_row(from_these_coords)
         row = []
         x = from_these_coords[0]

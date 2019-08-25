@@ -2,7 +2,6 @@ require_relative "pawn_moves"
 require_relative "king_moves"
 require_relative "knight_moves"
 require_relative "slide_moves"
-# require_relative "step_moves"
 
 module ChessBoardConstraints
     include PawnMoves
@@ -30,10 +29,6 @@ module ChessBoardConstraints
         end
         raise HumanInputError.new("no moves") if moves.empty?
         moves
-    end
-
-    def constraints_are_met?(coords)
-        square(coords).empty? == true || square(coords).piece.color != @current_turn_color
     end
 
     # from here down are functions that raise errors when needed. 

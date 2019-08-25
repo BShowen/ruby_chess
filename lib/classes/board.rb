@@ -3,12 +3,12 @@ require "./lib/modules/board_modules/setup_board.rb"
 require "./lib/modules/board_modules/display_the_board.rb"
 require "./lib/modules/board_modules/board_constraints.rb"
 require "./lib/classes/chess_pieces.rb"
+require "./lib/modules/custom_error.rb"
 
 class Board
     include SetupBoard
     include DisplayTheBoard
     include ChessBoardConstraints
-    # attr_accessor :object_board
 
     def initialize
         @object_board = Array.new(8) {Array.new(8){Node.new} }
@@ -28,11 +28,11 @@ class Board
         @current_turn_color = whos_turn
         selected_square_cannot_be_blank(coords)
         selected_square_cannot_be_opponents_piece(coords)
-        puts "Your legal moves are: #{show_moves(get_moves_for_selected_piece(coords))}"
+        show_moves(get_moves_for_selected_piece(coords))
     end
 
     def move(current_coords, desired_coords)
-        if get_moves_for_selected_piece(current_coords).include? desired_coords
+        if get_moves_for_selected_piece(current_coords).include?(desired_coords)
             make_move(current_coords, desired_coords)
         else
             raise HumanInputError.new("illegal") 
@@ -49,7 +49,7 @@ class Board
         end
         str
     end
-
+    
     def square(coordinates)
         row = coordinates[1]
         column = coordinates[0]
