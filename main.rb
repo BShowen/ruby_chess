@@ -8,9 +8,9 @@ def pickup_piece
         $selected_piece = $game.solicit_move
         clear_screen
         display_board
-        puts $board.select_piece($selected_piece, $game.turn)
+        $board.select_piece($selected_piece, $game.turn)
     rescue StandardError => e
-        puts "entered rescue in main"
+        # puts "entered rescue in pickup_piece"
         puts e.message
         # puts e.backtrace
         retry
@@ -26,7 +26,9 @@ def set_piece_down
         clear_screen
         display_board
     rescue StandardError => e
+        # puts "eneterd rescue in set_piece_down"
         puts e.message 
+        # puts e.backtrace
         retry
     end
 end
@@ -50,6 +52,7 @@ def play_game
     loop do
         pickup_piece
         set_piece_down
+        # set_piece_down(pick_piece_up)
     end
 end
 

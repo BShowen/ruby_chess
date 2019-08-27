@@ -2,6 +2,7 @@ require_relative "pawn_moves"
 require_relative "king_moves"
 require_relative "knight_moves"
 require_relative "slide_moves"
+require_relative "check.rb"
 
 module ChessBoardConstraints
     include PawnMoves
@@ -11,36 +12,49 @@ module ChessBoardConstraints
 
     private
     def get_moves_for_selected_piece(current_coords)
-        moves = []
+        moves = {
+            north: [], 
+            north_east: [],
+            east: [],
+            south_east: [], 
+            south: [], 
+            south_west: [], 
+            west: [], 
+            north_west: []
+        }
         case square(current_coords).piece.character
         when "K"
-            moves += king_moves(current_coords)
+            moves = king_moves(current_coords, moves)
         when "q"
-            moves += horizontal_row(current_coords) + vertical_row(current_coords)
-            moves += ascending_row(current_coords) + descending_row(current_coords)
+            moves = ascending_row(current_coords, moves)
+            moves = descending_row(current_coords, moves)
+            moves = vertical_row(current_coords, moves)
+            moves = horizontal_row(current_coords, moves)
         when "p"
-            moves += pawn_moves(current_coords)
+            moves = pawn_moves(current_coords, moves)
         when "k"
-            moves += knight_moves(current_coords)
+            moves = knight_moves(current_coords, moves)
         when "r"
-            moves += horizontal_row(current_coords) + vertical_row(current_coords)
+            moves = vertical_row(current_coords, moves)
+            moves = horizontal_row(current_coords, moves)
         when "b"
-            moves += ascending_row(current_coords) + descending_row(current_coords)
+            moves = ascending_row(current_coords, moves)
+            moves = descending_row(current_coords, moves)
         end
-        raise HumanInputError.new("no moves") if moves.empty?
         moves
     end
 
+    def constraints_are_met?(coords, current_color)
+        # square(coords).empty? == true || square(coords).piece.color != @current_turn_color
+        square(coords).empty? == true || square(coords).piece.color != current_color
+    end
+
     # from here down are functions that raise errors when needed. 
-    def selected_square_cannot_be_blank(from_here)
-        raise HumanInputError.new("blank") if square(from_here).empty?
+    def selected_square_cannot_be_blank(coords)
+        raise HumanInputError.new("blank") if square(coords).empty?
     end
 
-    def selected_square_cannot_be_opponents_piece(from_here)
-        raise HumanInputError.new("opponents piece") if square(from_here).piece.color != @current_turn_color
-    end
-
-    def validate_move_constraints(from_here, to_here)
-        raise HumanInputError.new("not legal") if enforce_constraints_on_selected_piece(from_here, to_here) == false
+    def selected_square_cannot_be_opponents_piece(coords)
+        raise HumanInputError.new("opponents piece") if square(coords).piece.color != @current_turn_color
     end
 end

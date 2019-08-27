@@ -1,4 +1,5 @@
 require_relative "node"
+require_relative "stack"
 require "./lib/modules/board_modules/setup_board.rb"
 require "./lib/modules/board_modules/display_the_board.rb"
 require "./lib/modules/board_modules/board_constraints.rb"
@@ -9,17 +10,19 @@ class Board
     include SetupBoard
     include DisplayTheBoard
     include ChessBoardConstraints
+    include Check
 
     def initialize
         @object_board = Array.new(8) {Array.new(8){Node.new} }
+        @stack = Stack.new
+        @temp_board = nil
+        @current_turn_color = nil
         set_black_pieces
         set_white_pieces
-        @display_board = nil
-        @current_turn_color = nil
     end
 
     def to_s
-        clone_object_board
+        @temp_board = clone_object_board
         convert_each_square_to_string
         add_borders_and_columns_to_board
     end
@@ -28,13 +31,18 @@ class Board
         @current_turn_color = whos_turn
         selected_square_cannot_be_blank(coords)
         selected_square_cannot_be_opponents_piece(coords)
-        show_moves(get_moves_for_selected_piece(coords))
+        # show_moves(get_moves_for_selected_piece(coords))
+        moves = legal_moves(coords)
+        raise HumanInputError.new("no moves") if moves[:good].empty?
+        moves
     end
 
     def move(current_coords, desired_coords)
-        if get_moves_for_selected_piece(current_coords).include?(desired_coords)
+        if legal_moves(current_coords)[:good].include?(desired_coords)
             make_move(current_coords, desired_coords)
         else
+        # elsif legal_moves(current_coords)[:bad].include?(desired_coords) || 
+            # legal_moves(current_coords)[:good].include?(desired_coords) == false
             raise HumanInputError.new("illegal") 
         end
     end

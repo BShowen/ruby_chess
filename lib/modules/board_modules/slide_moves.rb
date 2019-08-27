@@ -1,86 +1,83 @@
 module SlideMoves
-    private
-    def constraints_are_met?(coords)
-        square(coords).empty? == true || square(coords).piece.color != @current_turn_color
-    end
-    
-    def ascending_row(from_these_coords)
-        row = []
-        x = from_these_coords[0]
-        y = from_these_coords[1]
+    private    
+    def ascending_row(current_coordinates, moves)
+        current_color = square(current_coordinates).piece.color
+        x = current_coordinates[0]
+        y = current_coordinates[1]
         for i in 1..7
             break if (x + i > 7 || y + i > 7)
-            row << [x + i, y + i] if (x + i < 8 && y + i < 8) && constraints_are_met?([x + i, y + i])
-            break if constraints_are_met?([x + i, y + i]) == false
+            moves[:north_east] << [x + i, y + i] if (x + i < 8 && y + i < 8) && constraints_are_met?([x + i, y + i], current_color)
+            break if constraints_are_met?([x + i, y + i], current_color) == false
             break if square([x + i, y + i]).empty? == false
         end
-
+    
         for i in 1..7
             break if (x - i < 0 || y - i < 0)
-            row << [x - i, y - i] if (x - i >= 0 && y - i >= 0) && constraints_are_met?([x - i, y - i])
-            break if constraints_are_met?([x - i, y - i]) == false
+            moves[:south_west] << [x - i, y - i] if (x - i >= 0 && y - i >= 0) && constraints_are_met?([x - i, y - i], current_color)
+            break if constraints_are_met?([x - i, y - i], current_color) == false
             break if square([x - i, y - i]).empty? == false
         end
-        row
+        moves
     end
-
-    def descending_row(from_these_coords)
-        row = []
-        x = from_these_coords[0]
-        y = from_these_coords[1]
-        for i in 1..7
-            break if (x + i > 7 || y - i < 0 )
-            row << [x + i, y - i] if (x + i < 8 && y - i >= 0) && constraints_are_met?([x + i, y - i])
-            break if constraints_are_met?([x + i, y - i]) == false
-            break if square([x + i, y - i]).empty? == false
-        end
-
+    
+    def descending_row(current_coordinates, moves)
+        current_color = square(current_coordinates).piece.color
+        x = current_coordinates[0]
+        y = current_coordinates[1]
         for i in 1..7
             break if (x - i < 0 || y + i > 7)
-            row << [x - i, y + i] if (x - i >= 0 && y + i < 8) && constraints_are_met?([x - i, y + i])
-            break if constraints_are_met?([x - i, y + i]) == false
+            moves[:north_west] << [x - i, y + i] if (x - i >= 0 && y + i < 8) && constraints_are_met?([x - i, y + i], current_color)
+            break if constraints_are_met?([x - i, y + i], current_color) == false
             break if square([x - i, y + i]).empty? == false
         end
-        row
+    
+        for i in 1..7
+            break if (x + i > 7 || y - i < 0 )
+            moves[:south_east] << [x + i, y - i] if (x + i < 8 && y - i >= 0) && constraints_are_met?([x + i, y - i], current_color)
+            break if constraints_are_met?([x + i, y - i], current_color) == false
+            break if square([x + i, y - i]).empty? == false
+        end
+        moves
     end
-
-    def vertical_row(from_these_coords)
-        row = []
-        x = from_these_coords[0]
-        y = from_these_coords[1]
+    
+    def vertical_row(current_coordinates, moves)
+        current_color = square(current_coordinates).piece.color
+        x = current_coordinates[0]
+        y = current_coordinates[1]
         for i in 1..7
             break if (y + i > 7)
-            row << [x, y + i] if (y + i < 8) && constraints_are_met?([x, y + i])
-            break if constraints_are_met?([x, y + i]) == false
+            moves[:north] << [x, y + i] if (y + i < 8) && constraints_are_met?([x, y + i], current_color)
+            break if constraints_are_met?([x, y + i], current_color) == false
             break if square([x, y + i]).empty? == false
         end
-
+    
         for i in 1..7
             break if (y - i < 0)
-            row << [x, y - i] if (y - i >= 0 ) && constraints_are_met?([x, y - i])
-            break if constraints_are_met?([x, y - i]) == false
+            moves[:south] << [x, y - i] if (y - i >= 0 ) && constraints_are_met?([x, y - i], current_color)
+            break if constraints_are_met?([x, y - i], current_color) == false
             break if square([x, y - i]).empty? == false
         end
-        row
+        moves
     end
-
-    def horizontal_row(from_these_coords)
-        row = []
-        x = from_these_coords[0]
-        y = from_these_coords[1]
+    
+    def horizontal_row(current_coordinates, moves)
+        current_color = square(current_coordinates).piece.color
+        x = current_coordinates[0]
+        y = current_coordinates[1]
         for i in 1..7
             break if (x + i > 7)
-            row << [x + i, y] if (x + i < 8) && constraints_are_met?([x + i, y])
-            break if constraints_are_met?([x + i, y]) == false
+            moves[:west] << [x + i, y] if (x + i < 8) && constraints_are_met?([x + i, y], current_color)
+            break if constraints_are_met?([x + i, y], current_color) == false
             break if square([x + i, y]).empty? == false
         end
-
+    
         for i in 1..7
             break if (x - i < 0)
-            row << [x - i, y] if (x - i >= 0 ) && constraints_are_met?([x - i, y])
-            break if constraints_are_met?([x - i, y]) == false
+            moves[:east] << [x - i, y] if (x - i >= 0 ) && constraints_are_met?([x - i, y], current_color)
+            break if constraints_are_met?([x - i, y], current_color) == false
             break if square([x - i, y]).empty? == false
         end
-        row
+        moves
     end
+    
 end
