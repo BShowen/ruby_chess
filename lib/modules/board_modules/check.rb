@@ -10,9 +10,36 @@ module Check
                 undo_temporary_move
             end
         end
-        puts "Good: #{valid_moves[:good]}"
-        puts "Bad: #{valid_moves[:bad]}"
         valid_moves
+    end
+
+    def can_teammates_help?(king)
+        attack_path = get_attack_path(king)
+        for row in 0..7 do 
+            for column in 0..7 do 
+                sqr = square([column, row])
+                next if sqr.empty? || sqr.piece.color != @current_turn_color || legal_moves([column, row])[:good].empty?
+                legal_moves([column, row])[:good].each do |coord|
+                    return true if attack_path.include?(coord)
+                end
+            end
+        end
+        false
+    end
+
+    def get_attack_path(king)
+        path = nil
+        for row in 0..7 do 
+            for column in 0..7 do 
+                sqr = square([column, row])
+                next if sqr.empty? || sqr.piece.color == @current_turn_color
+                get_moves_for_selected_piece([column, row]).select do |row, coords|
+                    path = coords if coords.include?(king)
+                    break if path != nil
+                end
+            end
+        end
+        path
     end
 
     def find_king_coords
@@ -23,22 +50,6 @@ module Check
                 return [column, row] if sqr.piece.character == "K" && sqr.piece.color == @current_turn_color
             end
         end
-    end
-
-    def in_check?
-        king = find_king_coords
-        for row in 0..7 do 
-            for column in 0..7 do 
-                next if square([column, row]).empty? || square([column, row]).piece.color == @current_turn_color || square([column, row]).piece.character == "K"
-                get_moves_for_selected_piece([column, row]).each do |row, coords|
-                    next if coords.empty?
-                    coords.each do 
-                        return true if coords.include?(king)
-                    end
-                end
-            end
-        end
-        false
     end
 
     def make_temporary_move(starting_coords, ending_coords)
@@ -62,25 +73,4 @@ module Check
         square(move_data[:capturer][:starting_position]).piece = move_data[:capturer][:piece]
         square(move_data[:captured][:last_position]).piece = move_data[:captured][:piece]
     end
-
-    # def get_search_path(hash, king_coords)
-    #     hash.select do |key, val|
-    #         val.include?(king_coords)
-    #     end.first_value
-    # end
-    
-    # class Hash
-    #     def first_value
-    #         self.values[0]
-    #     end
-    # end
-
-    # def save_current_board_state 
-    #     @temp_board = clone_object_board
-    # end
-
-    # def revert_board_state
-    #     @object_board = @temp_board
-    #     @temp_board = nil
-    # end
 end

@@ -66,14 +66,14 @@ module SlideMoves
         y = current_coordinates[1]
         for i in 1..7
             break if (x + i > 7)
-            moves[:west] << [x + i, y] if (x + i < 8) && constraints_are_met?([x + i, y], current_color)
+            moves[:east] << [x + i, y] if (x + i < 8) && constraints_are_met?([x + i, y], current_color)
             break if constraints_are_met?([x + i, y], current_color) == false
             break if square([x + i, y]).empty? == false
         end
     
         for i in 1..7
             break if (x - i < 0)
-            moves[:east] << [x - i, y] if (x - i >= 0 ) && constraints_are_met?([x - i, y], current_color)
+            moves[:west] << [x - i, y] if (x - i >= 0 ) && constraints_are_met?([x - i, y], current_color)
             break if constraints_are_met?([x - i, y], current_color) == false
             break if square([x - i, y]).empty? == false
         end
