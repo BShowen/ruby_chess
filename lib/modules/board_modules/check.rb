@@ -63,13 +63,13 @@ module Check
                 starting_position: starting_coords,
             }
         }
-        @stack.push(piece_info)
+        @call_stack.push(piece_info)
         square(ending_coords).piece = square(starting_coords).piece
         square(starting_coords).piece = nil
     end
 
     def undo_temporary_move
-        move_data = @stack.pop
+        move_data = @call_stack.pop
         square(move_data[:capturer][:starting_position]).piece = move_data[:capturer][:piece]
         square(move_data[:captured][:last_position]).piece = move_data[:captured][:piece]
     end

@@ -1,5 +1,5 @@
 require_relative "node"
-require_relative "stack"
+require_relative "call_stack"
 require "./lib/modules/board_modules/setup_board.rb"
 require "./lib/modules/board_modules/display_the_board.rb"
 require "./lib/modules/board_modules/board_constraints.rb"
@@ -16,7 +16,7 @@ class Board
 
     def initialize
         @object_board = Array.new(8) {Array.new(8){Node.new} }
-        @stack = Stack.new
+        @call_stack = CallStack.new
         @temp_board = nil
         @current_turn_color = :white
         set_black_pieces

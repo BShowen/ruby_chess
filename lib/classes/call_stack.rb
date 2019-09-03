@@ -1,4 +1,4 @@
-class Stack
+class CallStack
     def initialize
         @stack = []
     end
