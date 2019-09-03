@@ -32,9 +32,9 @@ class Game
             display_board
             $board.select_piece(selected_piece)
         rescue StandardError => e
-            puts "entered rescue in pickup_piece"
+            # puts "entered rescue in pickup_piece"
             puts e.message
-            puts e.backtrace
+            # puts e.backtrace
             retry
         end
         selected_piece
@@ -48,9 +48,9 @@ class Game
             clear_screen
             display_board
         rescue StandardError => e
-            puts "eneterd rescue in set_piece_down"
+            # puts "eneterd rescue in set_piece_down"
             puts e.message 
-            puts e.backtrace
+            # puts e.backtrace
             retry
         end
     end

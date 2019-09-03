@@ -42,7 +42,7 @@ module Check
     def find_king_coords    
         each_square do |column, row, sqr|
             next if sqr.empty?
-            return [column, row] if sqr.piece.character == "K" && sqr.piece.color == @current_turn_color
+            return [column, row] if sqr.piece.is_king? && sqr.piece.color == @current_turn_color
         end
     end
 

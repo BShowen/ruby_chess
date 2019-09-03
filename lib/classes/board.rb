@@ -53,7 +53,7 @@ class Board
     def in_check?
         king = find_king_coords
         each_square do |column, row, sqr|
-            next if sqr.empty? || sqr.piece.color == @current_turn_color || sqr.piece.character == "K"
+            next if sqr.empty? || sqr.piece.color == @current_turn_color || sqr.piece.is_king?
             get_moves_for_selected_piece([column, row]).each_value do |attack_path|
                 next if attack_path.empty?
                 return true if attack_path.include?(king)

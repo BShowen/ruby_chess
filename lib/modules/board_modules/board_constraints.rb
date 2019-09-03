@@ -23,21 +23,21 @@ module ChessBoardConstraints
             north_west: []
         }
         case square(current_coords).piece.character
-        when "K"
+        when "\u2654", "\u265A" #king
             moves = king_moves(current_coords, moves)
-        when "q"
+        when "\u2655", "\u265B" #queen
             moves = ascending_row(current_coords, moves)
             moves = descending_row(current_coords, moves)
             moves = vertical_row(current_coords, moves)
             moves = horizontal_row(current_coords, moves)
-        when "p"
+        when "\u2659", "\u265F" #pawn
             moves = pawn_moves(current_coords, moves)
-        when "k"
+        when "\u2658", "\u265E" #knight
             moves = knight_moves(current_coords, moves)
-        when "r"
+        when "\u2656", "\u265C" #rook
             moves = vertical_row(current_coords, moves)
             moves = horizontal_row(current_coords, moves)
-        when "b"
+        when "\u2657", "\u265D" #bishop
             moves = ascending_row(current_coords, moves)
             moves = descending_row(current_coords, moves)
         end

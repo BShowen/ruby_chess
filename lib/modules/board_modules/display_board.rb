@@ -19,10 +19,13 @@ module DisplayBoard
 
     def add_borders_and_numbers_to_board
         @display_board.map!.with_index do |row,index|
-            "#{7 - index} | #{row.join(" | ")} | #{7 - index}\n"
+            "#{7 - index} | #{row.join(" | ")} | #{7 - index}\n  |---|---|---|---|---|---|---|---|\n"
         end
-        bottom_row = ["  |---|---|---|---|---|---|---|---|\n    A   B   C   D   E   F   G   H   "]
+        top_row = "  |---|---|---|---|---|---|---|---|\n"
+        bottom_row = ["    A   B   C   D   E   F   G   H   "]
+        @display_board.unshift(top_row)
         @display_board << bottom_row
+
         @display_board.join
     end 
 end
