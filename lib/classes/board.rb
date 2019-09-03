@@ -52,15 +52,11 @@ class Board
 
     def in_check?
         king = find_king_coords
-        for row in 0..7 do 
-            for column in 0..7 do 
-                next if square([column, row]).empty? || square([column, row]).piece.color == @current_turn_color || square([column, row]).piece.character == "K"
-                get_moves_for_selected_piece([column, row]).each do |row, coords|
-                    next if coords.empty?
-                    coords.each do 
-                        return true if coords.include?(king)
-                    end
-                end
+        each_square do |column, row, sqr|
+            next if sqr.empty? || sqr.piece.color == @current_turn_color || sqr.piece.character == "K"
+            get_moves_for_selected_piece([column, row]).each_value do |attack_path|
+                next if attack_path.empty?
+                return true if attack_path.include?(king)
             end
         end
         false
@@ -81,6 +77,15 @@ class Board
         row = coordinates[1]
         column = coordinates[0]
         @object_board[7 - row][column]
+    end
+
+    def each_square(&block)
+        for row in 0..7 do 
+            for column in 0..7 do 
+                sqr = square([column, row])
+                yield(column, row, sqr)
+            end
+        end
     end
 
     def make_move(starting_coords, ending_coords) 

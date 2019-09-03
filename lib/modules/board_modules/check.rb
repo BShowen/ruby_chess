@@ -14,14 +14,11 @@ module Check
     end
 
     def can_teammates_help?(king)
-        attack_path = get_attack_path(king)
-        for row in 0..7 do 
-            for column in 0..7 do 
-                sqr = square([column, row])
-                next if sqr.empty? || sqr.piece.color != @current_turn_color || get_potential_moves([column,row])[:legal].empty?
-                get_potential_moves([column, row])[:legal].each do |coord|
-                    return true if attack_path.include?(coord)
-                end
+        attack_path = get_attack_path(king) 
+        each_square do |column, row, sqr|
+            next if sqr.empty? || sqr.piece.color != @current_turn_color || get_potential_moves([column,row])[:legal].empty?
+            get_potential_moves([column, row])[:legal].each do |coord|
+                return true if attack_path.include?(coord)
             end
         end
         false
@@ -29,29 +26,23 @@ module Check
 
     def get_attack_path(king)
         path = nil
-        for row in 0..7 do 
-            for column in 0..7 do 
-                sqr = square([column, row])
-                next if sqr.empty? || sqr.piece.color == @current_turn_color
-                get_moves_for_selected_piece([column, row]).each_value do |coords|
-                    if coords.include?(king)
-                        path = coords 
-                        path.unshift([column,row])
-                        break 
-                    end
+        each_square do |column, row, sqr|
+            next if sqr.empty? || sqr.piece.color == @current_turn_color
+            get_moves_for_selected_piece([column, row]).each_value do |coords|
+                if coords.include?(king)
+                    path = coords 
+                    path.unshift([column,row])
+                    break 
                 end
             end
         end
         path
     end
 
-    def find_king_coords
-        for row in 0..7 do 
-            for column in 0..7 do 
-                sqr = square([column, row])
-                next if sqr.empty?
-                return [column, row] if sqr.piece.character == "K" && sqr.piece.color == @current_turn_color
-            end
+    def find_king_coords    
+        each_square do |column, row, sqr|
+            next if sqr.empty?
+            return [column, row] if sqr.piece.character == "K" && sqr.piece.color == @current_turn_color
         end
     end
 
