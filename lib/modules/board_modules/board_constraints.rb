@@ -51,10 +51,10 @@ module ChessBoardConstraints
 
     # from here down are functions that raise errors when needed. 
     def selected_square_cannot_be_blank(coords)
-        raise HumanInputError.new("blank") if square(coords).empty?
+        raise HumanInputError.new("That square is empty. Select a playing piece") if square(coords).empty?
     end
 
     def selected_square_cannot_be_opponents_piece(coords)
-        raise HumanInputError.new("opponents piece") if square(coords).piece.color != @current_turn_color
+        raise HumanInputError.new("You cannot select opponents pieces") if square(coords).piece.color != @current_turn_color
     end
 end

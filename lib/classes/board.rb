@@ -27,7 +27,7 @@ class Board
         selected_square_cannot_be_blank(coords)
         selected_square_cannot_be_opponents_piece(coords)
         potential_moves = get_potential_moves(coords)
-        raise HumanInputError.new("no moves") if potential_moves[:legal].empty?
+        raise HumanInputError.new("That piece has no legal moves. Try another piece") if potential_moves[:legal].empty?
         show_moves("legal moves", potential_moves[:legal]) if potential_moves[:legal].empty? == false
         show_moves("illegal moves", potential_moves[:illegal]) if potential_moves[:illegal].empty? == false
         potential_moves
@@ -37,7 +37,7 @@ class Board
         if get_potential_moves(current_coords)[:legal].include?(desired_coords)
             make_move(current_coords, desired_coords)
         else
-            raise HumanInputError.new("illegal") 
+            raise HumanInputError.new("That move is not legal")
         end
     end
 

@@ -1,6 +1,5 @@
 require "./lib/modules/game_modules/solicit_player_moves.rb"
-
-class Game
+class Game 
     include SolicitPlayerMoves
     attr_reader :turn
 
