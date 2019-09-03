@@ -4,6 +4,7 @@ require "./lib/modules/board_modules/display_board.rb"
 require "./lib/modules/board_modules/board_constraints.rb"
 require "./lib/classes/chess_piece.rb"
 require "./lib/modules/custom_error.rb"
+require "colorize"
 
 class Board
     include DisplayBoard
@@ -21,18 +22,20 @@ class Board
     end
 
     def select_piece(coords)
+        @display_board = nil
         selected_square_cannot_be_blank(coords)
         selected_square_cannot_be_opponents_piece(coords)
         potential_moves = get_potential_moves(coords)
         raise HumanInputError.new("That piece has no legal moves. Try another piece") if potential_moves[:legal].empty?
-        show_moves("legal moves", potential_moves[:legal]) if potential_moves[:legal].empty? == false
-        show_moves("illegal moves", potential_moves[:illegal]) if potential_moves[:illegal].empty? == false
-        potential_moves
+        # show_moves("legal moves", potential_moves[:legal]) if potential_moves[:legal].empty? == false
+        # show_moves("illegal moves", potential_moves[:illegal]) if potential_moves[:illegal].empty? == false
+        set_colored_board(potential_moves)
     end
 
     def move(current_coords, desired_coords)
         if get_potential_moves(current_coords)[:legal].include?(desired_coords)
             make_move(current_coords, desired_coords)
+            @display_board = nil
         else
             raise HumanInputError.new("That move is not legal")
         end
