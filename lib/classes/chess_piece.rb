@@ -1,7 +1,7 @@
-class BasicChessPiece 
+class ChessPiece 
     attr_reader :character, :color
 
-    def initialize(character, color, current_position)
+    def initialize(character, color)
         @character = character
         @color = color
     end

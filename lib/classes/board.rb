@@ -3,7 +3,7 @@ require_relative "stack"
 require "./lib/modules/board_modules/setup_board.rb"
 require "./lib/modules/board_modules/display_the_board.rb"
 require "./lib/modules/board_modules/board_constraints.rb"
-require "./lib/classes/chess_pieces.rb"
+require "./lib/classes/chess_piece.rb"
 require "./lib/modules/custom_error.rb"
 
 class Board
