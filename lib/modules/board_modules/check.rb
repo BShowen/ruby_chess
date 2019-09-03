@@ -1,16 +1,16 @@
 module Check
     private
-    def legal_moves(starting_coords)
-        valid_moves = {good: [], bad: []}
-        get_moves_for_selected_piece(starting_coords).each do |row, coords|
-            next if coords.empty?
-            coords.each do |end_coord|
+    def get_potential_moves(starting_coords)
+        potential_moves = {legal: [], illegal: []}
+        get_moves_for_selected_piece(starting_coords).each_value do |attack_path|
+            next if attack_path.empty?
+            attack_path.each do |end_coord|
                 make_temporary_move(starting_coords, end_coord)
-                in_check? ? valid_moves[:bad] << end_coord : valid_moves[:good] << end_coord
+                in_check? ? potential_moves[:illegal] << end_coord : potential_moves[:legal] << end_coord
                 undo_temporary_move
             end
         end
-        valid_moves
+        potential_moves
     end
 
     def can_teammates_help?(king)
@@ -18,8 +18,8 @@ module Check
         for row in 0..7 do 
             for column in 0..7 do 
                 sqr = square([column, row])
-                next if sqr.empty? || sqr.piece.color != @current_turn_color || legal_moves([column, row])[:good].empty?
-                legal_moves([column, row])[:good].each do |coord|
+                next if sqr.empty? || sqr.piece.color != @current_turn_color || get_potential_moves([column,row])[:legal].empty?
+                get_potential_moves([column, row])[:legal].each do |coord|
                     return true if attack_path.include?(coord)
                 end
             end
@@ -33,9 +33,12 @@ module Check
             for column in 0..7 do 
                 sqr = square([column, row])
                 next if sqr.empty? || sqr.piece.color == @current_turn_color
-                get_moves_for_selected_piece([column, row]).select do |row, coords|
-                    path = coords if coords.include?(king)
-                    break if path != nil
+                get_moves_for_selected_piece([column, row]).each_value do |coords|
+                    if coords.include?(king)
+                        path = coords 
+                        path.unshift([column,row])
+                        break 
+                    end
                 end
             end
         end

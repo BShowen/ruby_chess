@@ -26,15 +26,15 @@ class Board
     def select_piece(coords)
         selected_square_cannot_be_blank(coords)
         selected_square_cannot_be_opponents_piece(coords)
-        moves = legal_moves(coords)
-        raise HumanInputError.new("no moves") if moves[:good].empty?
-        show_moves("legal moves", moves[:good]) if moves[:good].empty? == false
-        show_moves("illegal moves", moves[:bad]) if moves[:bad].empty? == false
-        moves
+        potential_moves = get_potential_moves(coords)
+        raise HumanInputError.new("no moves") if potential_moves[:legal].empty?
+        show_moves("legal moves", potential_moves[:legal]) if potential_moves[:legal].empty? == false
+        show_moves("illegal moves", potential_moves[:illegal]) if potential_moves[:illegal].empty? == false
+        potential_moves
     end
 
     def move(current_coords, desired_coords)
-        if legal_moves(current_coords)[:good].include?(desired_coords)
+        if get_potential_moves(current_coords)[:legal].include?(desired_coords)
             make_move(current_coords, desired_coords)
         else
             raise HumanInputError.new("illegal") 
@@ -43,7 +43,7 @@ class Board
 
     def check_mate?
         king = find_king_coords
-        if legal_moves(king)[:good].empty? == true && in_check? == true && can_teammates_help?(king) == false
+        if get_potential_moves(king)[:legal].empty? == true && in_check? == true && can_teammates_help?(king) == false
             true
         else
             false
