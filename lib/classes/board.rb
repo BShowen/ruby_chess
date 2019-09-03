@@ -1,14 +1,14 @@
 require_relative "node"
 require_relative "call_stack"
 require "./lib/modules/board_modules/setup_board.rb"
-require "./lib/modules/board_modules/display_the_board.rb"
+require "./lib/modules/board_modules/display_board.rb"
 require "./lib/modules/board_modules/board_constraints.rb"
 require "./lib/classes/chess_piece.rb"
 require "./lib/modules/custom_error.rb"
 
 class Board
     include SetupBoard
-    include DisplayTheBoard
+    include DisplayBoard
     include ChessBoardConstraints
     include Check
 
@@ -17,16 +17,10 @@ class Board
     def initialize
         @object_board = Array.new(8) {Array.new(8){Node.new} }
         @call_stack = CallStack.new
-        @temp_board = nil
+        @display_board = nil
         @current_turn_color = :white
         set_black_pieces
         set_white_pieces
-    end
-
-    def to_s
-        @temp_board = clone_object_board
-        convert_each_square_to_string
-        add_borders_and_columns_to_board
     end
 
     def select_piece(coords)
@@ -73,7 +67,7 @@ class Board
     end
 
     private
-    def show_moves(message, arr)
+    def show_moves(message, arr) #this method will be removed once I learn how to colorize the chess board. 
         str = ""
         converter = { "a" => 0, "b" => 1, "c" => 2, "d" => 3, "e" => 4, "f" => 5, "g" => 6, "h" => 7}
         arr.each do |coord|
