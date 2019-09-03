@@ -1,11 +1,10 @@
 module DisplayBoard
-    private
     def to_s
         @display_board = clone_object_board
         convert_each_square_to_string
         add_borders_and_numbers_to_board
     end
-
+    private
     def clone_object_board
         Marshal.load(Marshal.dump(@object_board))
     end
