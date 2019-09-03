@@ -1,13 +1,11 @@
 require_relative "node"
 require_relative "call_stack"
-require "./lib/modules/board_modules/setup_board.rb"
 require "./lib/modules/board_modules/display_board.rb"
 require "./lib/modules/board_modules/board_constraints.rb"
 require "./lib/classes/chess_piece.rb"
 require "./lib/modules/custom_error.rb"
 
 class Board
-    include SetupBoard
     include DisplayBoard
     include ChessBoardConstraints
     include Check
@@ -19,8 +17,7 @@ class Board
         @call_stack = CallStack.new
         @display_board = nil
         @current_turn_color = :white
-        set_black_pieces
-        set_white_pieces
+        initialize_pieces
     end
 
     def select_piece(coords)
@@ -91,5 +88,16 @@ class Board
     def make_move(starting_coords, ending_coords) 
         square(ending_coords).piece = square(starting_coords).piece
         square(starting_coords).piece = nil
+    end
+
+    def initialize_pieces
+        black_character = ["\u265C", "\u265E", "\u265D", "\u265A", "\u265B", "\u265D", "\u265E", "\u265C"]
+        white_character = ["\u2656", "\u2658", "\u2657", "\u2654", "\u2655", "\u2657", "\u2658", "\u2656"]
+        for i in 0..7 do 
+            square([ i ,7]).piece = ChessPiece.new(black_character[ i ],:black)
+            square([ i ,0]).piece = ChessPiece.new(white_character[ i ],:white)
+            square([ i ,6]).piece = ChessPiece.new("\u265F",:black)
+            square([ i ,1]).piece = ChessPiece.new("\u2659",:white)
+        end
     end
 end
