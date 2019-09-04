@@ -27,22 +27,14 @@ module DisplayBoard
         Marshal.load(Marshal.dump(@object_board))
     end
 
-    # def convert_each_square_to_string
-    #     @display_board.map! do |row|
-    #         row.map! do |square|
-    #             square.empty? ? " " : square.piece.character
-    #         end
-    #     end
-    # end
-
     def convert_each_square_to_string
         @display_board.map! do |row|
             row.map! do |square|
                 if square.background != nil
                     color = square.background
-                    square.empty? ? " ".colorize(:background => color) : square.piece.character.colorize(:background => color)
+                    square.empty? ? "   ".colorize(:background => color) : square.piece.character.center(3).colorize(:background => color)
                 else
-                    square.empty? ? " " : square.piece.character
+                    square.empty? ? "   " : square.piece.character.center(3)
                 end
             end
         end
@@ -60,10 +52,10 @@ module DisplayBoard
 
     def add_borders_and_numbers_to_board
         @display_board.map!.with_index do |row,index|
-            "#{7 - index} | #{row.join(" | ")} | #{7 - index}\n  |---|---|---|---|---|---|---|---|\n"
+            "#{7 - index} | #{row.join(" | ")} | #{7 - index}\n  |-----|-----|-----|-----|-----|-----|-----|-----|\n"
         end
-        top_row = "  |---|---|---|---|---|---|---|---|\n"
-        bottom_row = ["    A   B   C   D   E   F   G   H   "]
+        top_row = "  |-----|-----|-----|-----|-----|-----|-----|-----|\n"
+        bottom_row = ["     A     B     C     D     E     F     G     H     "]
         @display_board.unshift(top_row)
         @display_board.push(bottom_row)
         @display_board.join
