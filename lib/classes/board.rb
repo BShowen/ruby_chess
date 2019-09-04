@@ -1,10 +1,13 @@
+require "rubygems"
+require "bundler/setup"
+require "colorize"
+
 require_relative "node"
 require_relative "call_stack"
 require "./lib/modules/board_modules/display_board.rb"
 require "./lib/modules/board_modules/board_constraints.rb"
 require "./lib/classes/chess_piece.rb"
 require "./lib/modules/custom_error.rb"
-require "colorize"
 
 class Board
     include DisplayBoard
