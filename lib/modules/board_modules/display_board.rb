@@ -11,18 +11,26 @@ module DisplayBoard
     end
 
     private
-    def set_colored_board(moves)
+    def colorize_legal_moves(moves)
         @display_board = clone_object_board
-        moves[:legal].each do |coord| 
-            color_square(coord, :green)
-        end
-        moves[:illegal].each do |coord|
-            color_square(coord, :red)
-        end
+        color_the_green_sqaures(moves[:legal])
+        color_the_red_squares(moves[:illegal])
         convert_each_square_to_string
         add_borders_and_numbers_to_board
     end
 
+    def color_the_green_sqaures(moves)
+        moves.each do |coord| 
+            color_square(coord, :green)
+        end
+    end
+
+    def color_the_red_squares(moves)
+        moves.each do |coord|
+            color_square(coord, :red)
+        end
+    end
+    
     def clone_object_board
         Marshal.load(Marshal.dump(@object_board))
     end

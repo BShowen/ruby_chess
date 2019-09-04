@@ -25,11 +25,9 @@ class Board
         @display_board = nil
         selected_square_cannot_be_blank(coords)
         selected_square_cannot_be_opponents_piece(coords)
-        potential_moves = get_potential_moves(coords)
-       raise HumanInputError.new("That piece has no legal moves. Try another piece") if potential_moves[:legal].empty?
-        # show_moves("legal moves", potential_moves[:legal]) if potential_moves[:legal].empty? == false
-        # show_moves("illegal moves", potential_moves[:illegal]) if potential_moves[:illegal].empty? == false
-        set_colored_board(potential_moves)
+        legal_moves = get_potential_moves(coords)
+       raise HumanInputError.new("That piece has no legal moves. Try another piece") if legal_moves[:legal].empty?
+        colorize_legal_moves(legal_moves)
     end
 
     def move(current_coords, desired_coords)
@@ -63,16 +61,6 @@ class Board
     end
 
     private
-    def show_moves(message, arr) #this method will be removed once I learn how to colorize the chess board. 
-        str = ""
-        converter = { "a" => 0, "b" => 1, "c" => 2, "d" => 3, "e" => 4, "f" => 5, "g" => 6, "h" => 7}
-        arr.each do |coord|
-            x = converter.key(coord[0]).upcase
-            str += "(#{x},#{coord[1]}) "
-        end
-        puts "#{message}: #{str}"
-    end
-    
     def square(coordinates)
         row = coordinates[1]
         column = coordinates[0]
