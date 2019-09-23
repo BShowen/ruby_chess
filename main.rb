@@ -1,3 +1,8 @@
+require "bundler/inline"
+gemfile do 
+    source 'https://rubygems.org'
+    gem 'colorize'
+end
 require "./lib/classes/board"
 require "./lib/classes/player"
 require "./lib/classes/game"

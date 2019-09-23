@@ -1,7 +1,4 @@
-require "rubygems"
-require "bundler/setup"
 require "colorize"
-
 require_relative "node"
 require_relative "call_stack"
 require "./lib/modules/board_modules/display_board.rb"
@@ -29,7 +26,7 @@ class Board
         selected_square_cannot_be_blank(coords)
         selected_square_cannot_be_opponents_piece(coords)
         legal_moves = get_potential_moves(coords)
-       raise HumanInputError.new("That piece has no legal moves. Try another piece") if legal_moves[:legal].empty?
+        raise HumanInputError.new("That piece has no legal moves. Try another piece") if legal_moves[:legal].empty?
         colorize_legal_moves(legal_moves)
     end
 
