@@ -70,7 +70,7 @@ class Board
         @object_board[7 - row][column]
     end
 
-    def each_square(&block)
+    def each_square
         for row in 0..7 do 
             for column in 0..7 do 
                 sqr = square([column, row])
