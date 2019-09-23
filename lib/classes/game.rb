@@ -29,12 +29,12 @@ class Game
             puts "#{turn.capitalize}, Choose a piece to move"
             selected_piece = solicit_move
             clear_screen
-            display_board
             $board.select_piece(selected_piece)
             clear_screen
             display_board
         rescue StandardError => e
             # puts "entered rescue in pickup_piece"
+            display_board
             puts e.message
             # puts e.backtrace
             retry
