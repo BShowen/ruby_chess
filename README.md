@@ -29,6 +29,15 @@ All dependancies will be automatically installed. Simply download this repo to y
 * En passant 
 
 ## Code
+
+The hardest part to code was the logic for validating moves. I came up with two options to do this logic. 
+
+1) I could allow each chess piece to build its own adjacency list of moves relative to it's current position. 
+This would break the rule of encapsulation because each chess piece would have to...
+    * know the state of the board in order to not move into check. 
+    * know the state of all other chess pieces in order to know where it can/cant move.
+2) I could allow to board to handle move validation by creating a list of moves for each chess piece on demand from its current position. This would agree with the rule of encapsulation. The board knows its own state and can enforce constraints on the chess pieces
+
 ### Game board
 The board is a 2D array. There is an array holding 8 additional arrays inside. Each additioanl array represents a row and holds 8 indicies. A Node is assigned to each index inside the game board during initilization of the game board. I use a node to represent each board square and a node can be empty, hold chess piece, and also hold a background color, which is used for highlighting move paths. This is how I wrote the code to do this. 
 ```Ruby
@@ -52,3 +61,7 @@ class Node
     end
 end
 ```
+
+### Chess pieces
+I have one class that is used to represent a chess piece. It holds the characters piece, color, and responds to `is_king?`. 
+
