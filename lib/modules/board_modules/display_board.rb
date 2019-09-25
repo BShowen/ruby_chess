@@ -11,10 +11,10 @@ module DisplayBoard
     end
 
     private
-    def colorize_legal_moves(moves)
+    def colorize_moves(moves)
         @display_board = clone_object_board
-        color_the_green_sqaures(moves[:legal])
-        color_the_red_squares(moves[:illegal])
+        color_the_green_sqaures(moves[:good])
+        color_the_red_squares(moves[:bad])
         convert_each_square_to_string
         add_borders_and_numbers_to_board
     end

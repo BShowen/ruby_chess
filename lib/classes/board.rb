@@ -1,15 +1,27 @@
 require "colorize"
 require_relative "node"
 require_relative "call_stack"
+require "./lib/modules/board_modules/pawn_moves"
+require "./lib/modules/board_modules/king_moves"
+require "./lib/modules/board_modules/knight_moves"
+require "./lib/modules/board_modules/slide_moves"
 require "./lib/modules/board_modules/display_board.rb"
 require "./lib/modules/board_modules/board_constraints.rb"
+require "./lib/modules/board_modules/move_validation.rb"
 require "./lib/classes/chess_piece.rb"
 require "./lib/modules/custom_error.rb"
+require "./lib/modules/board_modules/check.rb"
+require "board_display"
 
 class Board
     include DisplayBoard
-    include ChessBoardConstraints
+    include BoardConstraints
     include Check
+    include MoveValidation
+    include PawnMoves
+    include KingMoves
+    include KnightMoves
+    include SlideMoves
 
     attr_writer :current_turn_color
 
@@ -25,13 +37,13 @@ class Board
         @display_board = nil
         selected_square_cannot_be_blank(coords)
         selected_square_cannot_be_opponents_piece(coords)
-        legal_moves = get_potential_moves(coords)
-        raise HumanInputError.new("That piece has no legal moves. Try another piece") if legal_moves[:legal].empty?
-        colorize_legal_moves(legal_moves)
+        legal_moves = sanitized_moves(coords)
+        raise HumanInputError.new("That piece has no legal moves. Try another piece") if legal_moves[:good].empty?
+        colorize_moves(legal_moves)
     end
 
     def move(current_coords, desired_coords)
-        if get_potential_moves(current_coords)[:legal].include?(desired_coords)
+        if sanitized_moves(current_coords)[:good].include?(desired_coords)
             make_move(current_coords, desired_coords)
             @display_board = nil
         else
@@ -41,7 +53,7 @@ class Board
 
     def check_mate?
         king = find_king_coords
-        if get_potential_moves(king)[:legal].empty? == true && in_check? == true && can_teammates_help?(king) == false
+        if sanitized_moves(king)[:good].empty? == true && in_check? == true && can_teammates_help?(king) == false
             true
         else
             false
@@ -52,7 +64,7 @@ class Board
         king = find_king_coords
         each_square do |column, row, sqr|
             next if sqr.empty? || sqr.piece.color == @current_turn_color || sqr.piece.is_king?
-            get_moves_for_selected_piece([column, row]).each_value do |attack_path|
+            potential_moves([column, row]).each_value do |attack_path|
                 next if attack_path.empty?
                 return true if attack_path.include?(king)
             end
@@ -81,7 +93,7 @@ class Board
         square(starting_coords).piece = nil
     end
 
-    def initialize_pieces
+    def initialize_pieces #   rook          knight       bishop       king         queen        bishop      knight     rook
         black_character = ["\u265C", "\u265E", "\u265D", "\u265A", "\u265B", "\u265D", "\u265E", "\u265C"]
         white_character = ["\u2656", "\u2658", "\u2657", "\u2654", "\u2655", "\u2657", "\u2658", "\u2656"]
         for i in 0..7 do 
