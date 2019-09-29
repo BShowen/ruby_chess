@@ -11,9 +11,10 @@ require "./lib/modules/board_modules/move_validation.rb"
 require "./lib/classes/chess_piece.rb"
 require "./lib/modules/custom_error.rb"
 require "./lib/modules/board_modules/check.rb"
-require "board_display"
+require "./lib/modules/serialize.rb"
 
 class Board
+    include Serialize
     include DisplayBoard
     include BoardConstraints
     include Check
@@ -23,7 +24,7 @@ class Board
     include KnightMoves
     include SlideMoves
 
-    attr_writer :current_turn_color
+    attr_reader :current_turn_color
 
     def initialize
         @object_board = Array.new(8) {Array.new(8){Node.new} }
@@ -72,7 +73,20 @@ class Board
         false
     end
 
+    def to_json
+        JSON.dump({
+            :object_board => @object_board, 
+            :call_stack => @call_stack,
+            :display_board => @display_board,
+            :current_turn_color => @current_turn_color
+        })
+    end
+
+    def toggle_turn
+        @current_turn_color == :white ? @current_turn_color = :black : @current_turn_color = :white
+    end
     private
+
     def square(coordinates)
         row = coordinates[1]
         column = coordinates[0]
@@ -91,6 +105,7 @@ class Board
     def make_move(starting_coords, ending_coords) 
         square(ending_coords).piece = square(starting_coords).piece
         square(starting_coords).piece = nil
+        toggle_turn
     end
 
     def initialize_pieces #   rook          knight       bishop       king         queen        bishop      knight     rook
