@@ -18,4 +18,11 @@ class ChessPiece
     def is_king?
         @king
     end
+
+    def to_json
+        JSON.dump({
+            :character => @character, 
+            :color => @color
+        })
+    end
 end

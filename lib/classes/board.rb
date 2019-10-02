@@ -1,3 +1,4 @@
+require "json"
 require "colorize"
 require_relative "node"
 require_relative "call_stack"
@@ -11,10 +12,10 @@ require "./lib/modules/board_modules/move_validation.rb"
 require "./lib/classes/chess_piece.rb"
 require "./lib/modules/custom_error.rb"
 require "./lib/modules/board_modules/check.rb"
-require "./lib/modules/serialize.rb"
+# require "./lib/modules/serialize.rb"
 
 class Board
-    include Serialize
+    # include Serialize
     include DisplayBoard
     include BoardConstraints
     include Check
@@ -24,7 +25,7 @@ class Board
     include KnightMoves
     include SlideMoves
 
-    attr_reader :current_turn_color
+    attr_accessor :current_turn_color
 
     def initialize
         @object_board = Array.new(8) {Array.new(8){Node.new} }
@@ -73,19 +74,36 @@ class Board
         false
     end
 
-    def to_json
-        JSON.dump({
-            :object_board => @object_board, 
-            :call_stack => @call_stack,
-            :display_board => @display_board,
-            :current_turn_color => @current_turn_color
-        })
-    end
+    # def to_json
+    #     JSON.dump({
+    #         :object_board => serialize_object_board, 
+    #         :display_board => @display_board,
+    #         :current_turn_color => @current_turn_color
+    #     })
+    # end
 
     def toggle_turn
         @current_turn_color == :white ? @current_turn_color = :black : @current_turn_color = :white
     end
+
+    # def load_game_state(json_hash)
+    #     @object_board = json_hash["object_board"]
+    #     @display_board = json_hash["display_board"]
+    #     @current_turn_color = json_hash["current_turn_color"]
+    # end
+
     private
+    # def serialize_object_board
+    #     hash = {}
+    #     int = 0
+    #     @object_board.each do |row|
+    #         row.each do |square|
+    #             hash[int] = square.to_json
+    #             int += 1
+    #         end
+    #     end
+    #     hash
+    # end
 
     def square(coordinates)
         row = coordinates[1]
@@ -94,7 +112,7 @@ class Board
     end
 
     def each_square
-        for row in 0..7 do 
+        for row in 0..7 
             for column in 0..7 do 
                 sqr = square([column, row])
                 yield(column, row, sqr)

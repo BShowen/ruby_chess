@@ -1,5 +1,5 @@
 module SolicitPlayerMoves 
-    # private
+    private
     def self.save_game?(reply)
         reply == "sv" ? true : false    
     end 

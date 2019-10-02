@@ -9,4 +9,11 @@ class Node
     def empty?
         @piece == nil
     end
+
+    def to_json
+        JSON.dump({
+            :piece => @piece.to_json, 
+            :background => @background
+        })
+    end
 end
