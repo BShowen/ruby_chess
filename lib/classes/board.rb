@@ -1,42 +1,30 @@
 require "json"
 require "colorize"
-require_relative "node"
-require_relative "call_stack"
-require "./lib/modules/board_modules/pawn_moves"
-require "./lib/modules/board_modules/king_moves"
-require "./lib/modules/board_modules/knight_moves"
-require "./lib/modules/board_modules/slide_moves"
 require "./lib/modules/board_modules/display_board.rb"
 require "./lib/modules/board_modules/board_constraints.rb"
 require "./lib/modules/board_modules/move_validation.rb"
-require "./lib/classes/chess_piece.rb"
 require "./lib/modules/custom_error.rb"
-require "./lib/modules/board_modules/check.rb"
-# require "./lib/modules/serialize.rb"
+require "./lib/classes/chess_piece.rb"
+require_relative "node"
+require_relative "call_stack"
 
 class Board
-    # include Serialize
     include DisplayBoard
     include BoardConstraints
-    include Check
     include MoveValidation
-    include PawnMoves
-    include KingMoves
-    include KnightMoves
-    include SlideMoves
 
     attr_accessor :current_turn_color
 
     def initialize
         @object_board = Array.new(8) {Array.new(8){Node.new} }
         @call_stack = CallStack.new
-        @display_board = nil
+        @display_board = []
         @current_turn_color = :white
         initialize_pieces
     end
 
     def select_piece(coords)
-        @display_board = nil
+        @display_board.clear
         selected_square_cannot_be_blank(coords)
         selected_square_cannot_be_opponents_piece(coords)
         legal_moves = sanitized_moves(coords)
@@ -47,7 +35,7 @@ class Board
     def move(current_coords, desired_coords)
         if sanitized_moves(current_coords)[:good].include?(desired_coords)
             make_move(current_coords, desired_coords)
-            @display_board = nil
+            @display_board.clear
         else
             raise HumanInputError.new("That move is not legal")
         end
@@ -74,37 +62,21 @@ class Board
         false
     end
 
-    # def to_json
-    #     JSON.dump({
-    #         :object_board => serialize_object_board, 
-    #         :display_board => @display_board,
-    #         :current_turn_color => @current_turn_color
-    #     })
-    # end
-
     def toggle_turn
         @current_turn_color == :white ? @current_turn_color = :black : @current_turn_color = :white
     end
-
-    # def load_game_state(json_hash)
-    #     @object_board = json_hash["object_board"]
-    #     @display_board = json_hash["display_board"]
-    #     @current_turn_color = json_hash["current_turn_color"]
-    # end
+    
+    def to_s
+        if @display_board.empty?
+            @display_board = clone_object_board
+            convert_each_square_to_string
+            add_borders_and_numbers_to_board
+        else
+            @display_board.join
+        end
+    end
 
     private
-    # def serialize_object_board
-    #     hash = {}
-    #     int = 0
-    #     @object_board.each do |row|
-    #         row.each do |square|
-    #             hash[int] = square.to_json
-    #             int += 1
-    #         end
-    #     end
-    #     hash
-    # end
-
     def square(coordinates)
         row = coordinates[1]
         column = coordinates[0]

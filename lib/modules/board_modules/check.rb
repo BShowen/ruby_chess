@@ -18,7 +18,7 @@ module Check
             potential_moves([column, row]).each_value do |coords|
                 if coords.include?(king)
                     path = coords 
-                    path.unshift([column,row])
+                    path.unshift([column,row]) #attack path needs to include the square that the attacker is standing on. 
                     break 
                 end
             end

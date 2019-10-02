@@ -31,28 +31,45 @@ All dependancies will be automatically installed. Simply download this repo to y
 There are many ways you can choose to design this program. I decided to go with an approach that followed the basic rules of Object Oriented Design. I used Encapsulation to keep classes working on one thing only and to keep interdependence as low as possible. Inheritance was adhered to in order to keep code neat, organized and as DRY as possible. Abstraction was highly adhered to in order to keep the interface as simple as possible, tucking away all the logic going on behind the scenes. I didnt encounter a chance to use Polymorphism here. Maybe I did encounter a chance but didnt recognize it? Anyhow, lets get a rundown of whats happening here.
 
 * First the board is displayed to the player and the player is asked to select a piece. 
-* The player types the coordinate for the piece they want to seelct. For example, they type "a1", a pawn. 
+* The player types the coordinate for the piece they want to select. For example, they type "a1", a pawn. 
 * That input is then validated to ensure that... 
     1) The input is typo free.
     2) The player has not selected an opponents piece.
     3) The selected square is not blank.
-* Then the board is displayed to the players again with all the possible moves highlighted in green and any illegal moves highlighted in red. An illegal move is a move that would put the king in check. 
+* Then the board is displayed to the player again. This time with all the possible moves highlighted in green and any illegal moves highlighted in red (An illegal move is a move that would put the king in check).
 * The player is then asked to select where they want to move the piece to. For example, they type "a3", two spaces ahead. 
 * That input is then validated to ensure that...
     1) The input is typo free.
     2) The move is legal.
 * The piece is then moved to the desired position
-* At this point the board state is checked. Is the opponent in check? If so then the opponent is warned that theyre in check. They are required to get the king out of check during their next move. 
+* At this point the board state is checked. Is the opponent in check? If so then the opponent is warned that they're in check. They are required to get the king out of check during their next move. 
 * This cycle repeats itself until the board state is check_mate and the winner is declared. 
 
-Okay, now for the nitty gritty
-### Move validation
-The hardest part of this project was figuring out the logic for each chess piece. Since each piece moves slightly different from one another and also moves differently depending on the surrounding pieces I had to come up with a way to populate a list of moves for any piece at any point in the game. For example, a pawn moves forward, never backward. A king can step in any direction. A queen can slide in any direction. A knight moves in an L pattern and etc. To keep things organized I created modules to handle slide moves, king moves, knight moves, and pawn moves. 
+### Move Validation
+The hardest part of this project was figuring out the logic for each chess piece. Each piece moves slightly different from one another and also moves differently depending on the surrounding pieces. I had to come up with a way to populate a list of moves for any piece at any point in the game. For example...
+* A pawn moves forward, never backward, and can move two spaces ahead but only on the first move. It can move to the side but only when attacking. 
+* A king can step in any direction, but not onto his teamates. He also cant put himself in check. 
+* A queen can slide in any direction but not over any pieces. 
+* A knight moves in an L pattern.
+* All pieces must not expose their king to being in check.
+* And many other conditionals.  
 
-A chess piece holds a unicode representing its character, and its color. This is needed for move validation to work.
+To keep things organized I created modules to handle slide moves, king moves, knight moves, and pawn moves. 
 
+* Queen, Rook, and Bishop moves are populated by using methods in the SlideMoves module. 
+* King, Knight, and Pawn have their own modules for populating moves. 
+
+### Chess Pieces
+A chess piece only knows its unicode, which represents its character, and its color. Chess pieces are kept as dumb as possible leaving all logic to the board which enforces encapsulation. Chess piece unicodes and colors are are used for move logic-i.e., you shouldnt be able to select opponents pieces. 
+
+### Move Logic
 When a piece is selected, its unicode is checked and then its list of moves is generated based on the unciode (character) of the chess piece. To do this I use a method called `potential_moves(current_coords)` and I pass in coordinates. This method returns a hash with all of the possible moves that a piece can make from its current position. 
+>The list of moves returned by this method is a list of "potential" moves. Nothing else has been checked yet. For example, if the queen's legal move list includes the cooridnates [3,3] and [3,4] that means that the queen can see that square. However, it doesnt mean she can move to that sqaure. If she moves to that sqaure and in-turn exposes her king to being in check then that wouldnt be a legal move. So we still need to iterate over this potential move list and determine which moves are legal and illegal.
+
+My potential_moves method looks like this. 
 ```Ruby
+#Its long, its ugly, but its mine. I need to refactor this bad boy. 
+
   def potential_moves(current_coords)
         moves = {
             north: [], 
@@ -92,7 +109,9 @@ This method returns a hash that has the following keys `:north :north_east :east
 ```
 Each key points to an array of coordinates. Those coordinates are spots on the board that the piece can move onto. 
 
-Next, I take this hash of potential moves and I sanitize it into a hash of only two values `{good: [], bad: []}`. A good move is a move that can be made and it doesnt leave the king in check. A bad move is a move that, if done, would leave your king in check. I do this because in a game of chess it is illegal to put yourself in check. I use this list to colorize the board. I make this list by performing these steps.
+Now is the point which I terate over this list and determine which moves are legal and illegal.  I santize and condence this hash of potential moves into a hash of two values - `{good: [], bad: []}`. A good move is a move that can be made and it doesnt leave the king in check. A bad move is a move that, if done, would leave your king in check. I do this because in a game of chess it is illegal to put yourself in check. I also use this list to colorize the board. 
+
+The way I do thsi is simple, but it took me days to figure it out. I do it by performing these steps. 
 * First, create a hash with two keys `{good: [], bad: []}`
 * Get the hash of potential moves by calling `potential_moves`
 * Iterate through the hash of potential moves
@@ -103,20 +122,37 @@ Next, I take this hash of potential moves and I sanitize it into a hash of only 
     * Undo the move
 * return the hash of good/bad moves
 
+>Keep in mind this is a dumbed down version of whats actually happening. I show you the code below and describe it in more detail. 
+
 Here is the code for the steps above. 
 ```Ruby
 def sanitized_moves(starting_coords)
-        sanitized_moves = {good: [], bad: []}
-        potential_moves(starting_coords).each_value do |path|
-            next if path.empty?
-            path.each do |end_coord|
-                make_temporary_move(starting_coords, end_coord)
-                in_check? ? sanitized_moves[:bad] << end_coord : sanitized_moves[:good] << end_coord
-                undo_temporary_move
-            end
+    sanitized_moves = {good: [], bad: []}
+    potential_moves(starting_coords).each_value do |path|
+        next if path.empty?
+        path.each do |end_coord|
+            make_temporary_move(starting_coords, end_coord)
+            in_check? ? sanitized_moves[:bad] << end_coord : sanitized_moves[:good] << end_coord
+            undo_temporary_move
         end
-        sanitized_moves
     end
+    sanitized_moves
+end
+
+    #same code with a bunch of comments to decribe it like your five years old. ;) 
+
+def sanitized_moves(starting_coords)
+    sanitized_moves = {good: [], bad: []} #create the new hash
+    potential_moves(starting_coords).each_value do |path| #call potential_moves to get the list of potential moves for a chess piece. 
+        next if path.empty? #skip over any empty paths. 
+        path.each do |end_coord| #iterate over each path's set of corrdinates. 
+            make_temporary_move(starting_coords, end_coord) #make the potential move. Calm down is only temporary. 
+            in_check? ? sanitized_moves[:bad] << end_coord : sanitized_moves[:good] << end_coord #check our board state and add that coordinate to the appropriate hash key - i.e. :good or :bad
+            undo_temporary_move #undo that move. 
+        end
+    end
+    sanitized_moves #return that nice clean list of moves. 
+end
 ```
 
 

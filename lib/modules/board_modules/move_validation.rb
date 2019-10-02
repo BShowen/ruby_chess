@@ -1,4 +1,16 @@
+require "./lib/modules/board_modules/pawn_moves"
+require "./lib/modules/board_modules/king_moves"
+require "./lib/modules/board_modules/knight_moves"
+require "./lib/modules/board_modules/slide_moves"
+require "./lib/modules/board_modules/check.rb"
+
 module MoveValidation
+    include PawnMoves
+    include KingMoves
+    include KnightMoves
+    include SlideMoves
+    include Check
+
     private
     def sanitized_moves(starting_coords)
         sanitized_moves = {good: [], bad: []}
@@ -47,24 +59,24 @@ module MoveValidation
     end
 
     def make_temporary_move(starting_coords, ending_coords)
-        piece_info = {
+        move_data  = {
             captured: {
-                piece: square(ending_coords).piece, 
+                character: square(ending_coords).piece, 
                 last_position: ending_coords,
             },
-            capturer: {
-                piece: square(starting_coords).piece,
+            attacker: {
+                character: square(starting_coords).piece,
                 starting_position: starting_coords,
             }
         }
-        @call_stack.push(piece_info)
+        @call_stack.push(move_data) #this data will be used to undo the move. 
         square(ending_coords).piece = square(starting_coords).piece
         square(starting_coords).piece = nil
     end
 
     def undo_temporary_move
         move_data = @call_stack.pop
-        square(move_data[:capturer][:starting_position]).piece = move_data[:capturer][:piece]
-        square(move_data[:captured][:last_position]).piece = move_data[:captured][:piece]
+        square(move_data[:attacker][:starting_position]).piece = move_data[:attacker][:character]
+        square(move_data[:captured][:last_position]).piece = move_data[:captured][:character]
     end
 end

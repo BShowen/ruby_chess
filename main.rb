@@ -16,16 +16,11 @@ def play_game
     puts "Welcome to chess.\n".center(120)
     puts "Enter 1 to play a new game or enter 2 to load a game"
     reply = gets.chomp.to_i
-    until reply == 1 || reply == 2 do
-        if reply == 1
-            play
-        elsif reply == 2
-            load_game
-            play
-        else
-            puts "Try again."
-            reply = gets.chomp.to_i
-        end
+    if reply == 1
+        play
+    elsif reply == 2
+        load_game
+        play
     end
 end
 
@@ -55,6 +50,7 @@ end
 def play
     loop do
         clear_screen_display_board
+        puts "#{$board.current_turn_color}, you are in check." if $board.in_check?
         puts "#{$board.current_turn_color}, choose a piece to move. "
         begin
             $delta_1 = solicit_move
@@ -79,7 +75,6 @@ def play
         end
 
         break if $board.check_mate?
-        puts "#{$board.current_turn_color}, you are in check." if $board.in_check?
     end
     clear_screen_display_board
     puts "#{$board.toggle_turn.capitalize} wins!"
