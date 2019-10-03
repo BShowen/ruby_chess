@@ -50,8 +50,8 @@ end
 def play
     loop do
         clear_screen_display_board
-        puts "#{$board.current_turn_color}, you are in check." if $board.in_check?
-        puts "#{$board.current_turn_color}, choose a piece to move. "
+        puts "#{$board.current_turn_color.capitlize}, you are in check." if $board.in_check?
+        puts "#{$board.current_turn_color.capitalize}, choose a piece to move.\nTo save type `sv`"
         begin
             $delta_1 = solicit_move
             $board.select_piece($delta_1)

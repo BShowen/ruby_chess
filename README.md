@@ -20,8 +20,9 @@ All dependancies will be automatically installed. Simply download this repo to y
 * Custom error class 
     * for easy debugging while developing 
     * mainly for printing out any mistakes for the human to read during gameplay e.g. selection of the wrong piece, why a move is illegal etc. 
+* Serialization
+    * You can save and load your game at anypoint. 
 * TO-DO
-    * JSON Serialization for saving and resuming gameplay 
     * Pawn promotion 
     * En passant 
 
@@ -48,28 +49,7 @@ There are many ways you can choose to design this program. I decided to go with 
 * This cycle repeats itself until the board state is check_mate and the winner is declared. 
 
 ### Game board
-The board is a 2D array. There is an array holding 8 additional arrays inside. Each additioanl array represents a row and holds 8 indicies. A Node is assigned to each index inside the game board during initilization of the game board. I use a node to represent each board square and a node can be empty, hold chess piece, and also hold a background color, which is used for highlighting move paths. This is how I wrote the code to do this. 
-```Ruby
-# ./lib/classes/board.rb
-def initialize
-    @object_board = Array.new(8) {Array.new(8){Node.new} }
-    . . . 
-end
-
-# ./lib/classes/node.rb
-class Node
-    attr_accessor :piece, :background
-
-    def initialize 
-        @piece = nil
-        @background = nil
-    end
-
-    def empty?
-        @piece == nil
-    end
-end
-```
+The board is a 2D array. There is an array holding 8 additional arrays inside. Each additioanl array represents a row and holds 8 indicies. A Node is assigned to each index inside the game board during initilization. I use a node to represent each board square. A node can be empty, hold a chess piece, and also hold a background color.
 
 ### Move Validation
 The hardest part of this project was figuring out the logic for each chess piece. Each piece moves slightly different from one another and also moves differently depending on the surrounding pieces. I had to come up with a way to populate a list of moves for any piece at any point in the game. For example...
@@ -86,11 +66,11 @@ To keep things organized I created modules to handle slide moves, king moves, kn
 * King, Knight, and Pawn have their own modules for populating moves. 
 
 ### Chess Pieces
-A chess piece only knows its unicode, which represents its character, and its color. Chess pieces are kept as dumb as possible leaving all logic to the board which enforces encapsulation. Chess piece unicodes and colors are are used for move logic-i.e., you shouldnt be able to select opponents pieces. 
+A chess piece only knows its color and it's unicode which represents its character. Chess pieces are kept as dumb as possible leaving all logic to the board which enforces encapsulation. Chess piece unicodes and colors are are used for move logic-i.e., you shouldnt be able to select opponents pieces. 
 
 ### Move Logic
 When a piece is selected, its unicode is checked and then its list of moves is generated based on the unciode (character) of the chess piece. To do this I use a method called `potential_moves(current_coords)` and I pass in coordinates. This method returns a hash with all of the possible moves that a piece can make from its current position. 
->The list of moves returned by this method is a list of "potential" moves. Nothing else has been checked yet. For example, if the queen's legal move list includes the cooridnates [3,3] and [3,4] that means that the queen can see that square. However, it doesnt mean she can move to that sqaure. If she moves to that sqaure and in-turn exposes her king to being in check then that wouldnt be a legal move. So we still need to iterate over this potential move list and determine which moves are legal and illegal.
+>The list of moves returned by this method is a list of "potential" moves. Nothing else has been checked yet. For example, if the queen's legal move list includes the cooridnates [3,3]. That means that the queen can see that square. However, it doesnt mean she can move to that sqaure. If she moves to that sqaure and in turn exposes her king to being in check, then that wouldnt be a legal move. So we still need to iterate over this potential move list and determine which moves are legal and illegal.
 
 My potential_moves method looks like this. 
 ```Ruby
@@ -135,7 +115,7 @@ This method returns a hash that has the following keys `:north :north_east :east
 ```
 Each key points to an array of coordinates. Those coordinates are spots on the board that the piece can move onto. 
 
-Now is the point which I terate over this list and determine which moves are legal and illegal.  I santize and condence this hash of potential moves into a hash of two values - `{good: [], bad: []}`. A good move is a move that can be made and it doesnt leave the king in check. A bad move is a move that, if done, would leave your king in check. I do this because in a game of chess it is illegal to put yourself in check. I also use this list to colorize the board. 
+Now is the point which I iterate over this list and determine which moves are legal and illegal. I santize this hash of potential moves into a hash of two values - `{good: [], bad: []}`. A good move is a move that can be made and it doesnt leave the king in check. A bad move is a move that, if done, would leave your king in check. I do this because in a game of chess it is illegal to put yourself in check. I also use this list to colorize the board. 
 
 The way I do thsi is simple, but it took me days to figure it out. I do it by performing these steps. 
 * First, create a hash with two keys `{good: [], bad: []}`
@@ -226,6 +206,11 @@ and here is how I wrote check mate
 5           false
 6       end
 7   end
+# On line 2 im saying "if the king has no moves AND the king is in check AND his teammates cant help, then the king is in checkmate." 
 ```
-On line 2 im saying if the king has no moves AND the king is in check AND his teammates cant help, then the king is in checkmate. 
 
+# Thats it for now. 
+
+That is a lot to comprehend. Especially if you're fairly new to all of this, which I am (10/2/19). As I continue to study, code, and learn I will pop back in here and probably cringe at how bad this code is and then refactor it. Until then, its perfect :) 
+
+Thanks for checking it out!
