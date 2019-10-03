@@ -26,9 +26,11 @@ All dependancies will be automatically installed. Simply download this repo to y
     * En passant 
 
 ## Code 
-##### I am going to over explain it. It helps me solidify what ive learned and hopefully makes it easy for you to understand :) 
 
-There are many ways you can choose to design this program. I decided to go with an approach that followed the basic rules of Object Oriented Design. I used Encapsulation to keep classes working on one thing only and to keep interdependence as low as possible. Inheritance was adhered to in order to keep code neat, organized and as DRY as possible. Abstraction was highly adhered to in order to keep the interface as simple as possible, tucking away all the logic going on behind the scenes. I didnt encounter a chance to use Polymorphism here. Maybe I did encounter a chance but didnt recognize it? Anyhow, lets get a rundown of whats happening here.
+>I am going to over explain it. It helps me solidify what ive learned and hopefully makes it easy for you to understand :) 
+
+
+There are many ways you can choose to design this program. I decided to go with an approach that followed the basic rules of Object Oriented Design. I used Encapsulation to keep classes working on one thing only and to keep interdependence as low as possible. Inheritance (in the form of modules) was adhered to in order to keep code neat, organized and as DRY as possible. Abstraction was highly adhered to in order to keep the interface as simple as possibl. There are only 6 public methods available. I didnt encounter a chance to use Polymorphism here. Maybe I did encounter a chance but didnt recognize it? Anyhow, lets get a rundown of whats happening here.
 
 * First the board is displayed to the player and the player is asked to select a piece. 
 * The player types the coordinate for the piece they want to select. For example, they type "a1", a pawn. 
@@ -44,6 +46,30 @@ There are many ways you can choose to design this program. I decided to go with 
 * The piece is then moved to the desired position
 * At this point the board state is checked. Is the opponent in check? If so then the opponent is warned that they're in check. They are required to get the king out of check during their next move. 
 * This cycle repeats itself until the board state is check_mate and the winner is declared. 
+
+### Game board
+The board is a 2D array. There is an array holding 8 additional arrays inside. Each additioanl array represents a row and holds 8 indicies. A Node is assigned to each index inside the game board during initilization of the game board. I use a node to represent each board square and a node can be empty, hold chess piece, and also hold a background color, which is used for highlighting move paths. This is how I wrote the code to do this. 
+```Ruby
+# ./lib/classes/board.rb
+def initialize
+    @object_board = Array.new(8) {Array.new(8){Node.new} }
+    . . . 
+end
+
+# ./lib/classes/node.rb
+class Node
+    attr_accessor :piece, :background
+
+    def initialize 
+        @piece = nil
+        @background = nil
+    end
+
+    def empty?
+        @piece == nil
+    end
+end
+```
 
 ### Move Validation
 The hardest part of this project was figuring out the logic for each chess piece. Each piece moves slightly different from one another and also moves differently depending on the surrounding pieces. I had to come up with a way to populate a list of moves for any piece at any point in the game. For example...
@@ -122,10 +148,12 @@ The way I do thsi is simple, but it took me days to figure it out. I do it by pe
     * Undo the move
 * return the hash of good/bad moves
 
->Keep in mind this is a dumbed down version of whats actually happening. I show you the code below and describe it in more detail. 
+>This is a dumbed down version of whats actually happening. I show you the code below and describe it in more detail. 
 
 Here is the code for the steps above. 
 ```Ruby
+#./lib/modules/board_modules/move_validation.rb
+
 def sanitized_moves(starting_coords)
     sanitized_moves = {good: [], bad: []}
     potential_moves(starting_coords).each_value do |path|
@@ -139,7 +167,7 @@ def sanitized_moves(starting_coords)
     sanitized_moves
 end
 
-    #same code with a bunch of comments to decribe it like your five years old. ;) 
+    #same code with a bunch of comments to decribe it
 
 def sanitized_moves(starting_coords)
     sanitized_moves = {good: [], bad: []} #create the new hash
@@ -155,31 +183,49 @@ def sanitized_moves(starting_coords)
 end
 ```
 
+Now, I do this for two reasons. One, you're not allowed to make a move that puts the king in check. By sanitizing these moves into `:good` and `:bad` it makes it easy to enforce this rule. Your're only allowed to move to coordinates that are in the `:good` list. Two, I use this list to color the chess board. I color the squares green if you can move on them and red if you cant move on them. 
 
-### Game board
-The board is a 2D array. There is an array holding 8 additional arrays inside. Each additioanl array represents a row and holds 8 indicies. A Node is assigned to each index inside the game board during initilization of the game board. I use a node to represent each board square and a node can be empty, hold chess piece, and also hold a background color, which is used for highlighting move paths. This is how I wrote the code to do this. 
+### Check and CheckMate
+
+You are in check if...
+* Your king is in the attack path of an opponents piece. 
+
+You are in Checkmate if...
+* Your king is in the attack path of an opponents piece AND
+* Your king has no legal moves AND
+* Your teammates can't help you. (In other words, they cant come between the king and the attacker or take out the attacker)
+>These are almost the exact names that I use for the conditionals in the `check_mate?` method. 
+
+Heres how I coded check. 
 ```Ruby
-# ./lib/classes/board.rb
-def initialize
-    @object_board = Array.new(8) {Array.new(8){Node.new} }
-    . . . 
-end
+#./lib/classes/board.rb
 
-# ./lib/classes/node.rb
-class Node
-    attr_accessor :piece, :background
-
-    def initialize 
-        @piece = nil
-        @background = nil
+def in_check?
+        king = find_king_coords #get the coordinates of your king. 
+        each_square do |column, row, sqr| #iterate over each board square. 
+            next if sqr.empty? || sqr.piece.color == @current_turn_color || sqr.piece.is_king? #self explanatory 
+            potential_moves([column, row]).each_value do |attack_path| #iterate over all attack paths for every opponents piece.
+                next if attack_path.empty? #skip any empty paths. 
+                return true if attack_path.include?(king) #king is in check if your king's coordinates exist in the attack path of any opponents piece. 
+            end
+        end
+        false
     end
-
-    def empty?
-        @piece == nil
-    end
-end
 ```
 
-### Chess pieces
-I have one class that is used to represent a chess piece. It holds the characters piece, color, and responds to `is_king?`. 
+and here is how I wrote check mate
+
+```Ruby
+#./lib/classes/board.rb
+
+0  def check_mate?
+1        king = find_king_coords #get the coordinates of your king. 
+2       if sanitized_moves(king)[:good].empty? == true && in_check? == true && can_teammates_help?(king) == false
+3           true
+4       else
+5           false
+6       end
+7   end
+```
+On line 2 im saying if the king has no moves AND the king is in check AND his teammates cant help, then the king is in checkmate. 
 
