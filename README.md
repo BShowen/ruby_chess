@@ -72,7 +72,7 @@ A chess piece only knows its color and it's unicode which represents its charact
 When a piece is selected, its unicode is checked and then its list of moves is generated based on the unciode (character) of the chess piece. To do this I use a method called `potential_moves(current_coords)` and I pass in coordinates. This method returns a hash with all of the possible moves that a piece can make from its current position. 
 >The list of moves returned by this method is a list of "potential" moves. Nothing else has been checked yet. For example, if the queen's legal move list includes the cooridnates [3,3]. That means that the queen can see that square. However, it doesnt mean she can move to that sqaure. If she moves to that sqaure and in turn exposes her king to being in check, then that wouldnt be a legal move. So we still need to iterate over this potential move list and determine which moves are legal and illegal.
 
-My potential_moves method looks like this. 
+My potential_moves method looks like: 
 ```Ruby
 #Its long, its ugly, but its mine. I need to refactor this bad boy. 
 
@@ -117,7 +117,7 @@ Each key points to an array of coordinates. Those coordinates are spots on the b
 
 Now is the point which I iterate over this list and determine which moves are legal and illegal. I santize this hash of potential moves into a hash of two values - `{good: [], bad: []}`. A good move is a move that can be made and it doesnt leave the king in check. A bad move is a move that, if done, would leave your king in check. I do this because in a game of chess it is illegal to put yourself in check. I also use this list to colorize the board. 
 
-The way I do thsi is simple, but it took me days to figure it out. I do it by performing these steps. 
+The way I do this is simple, but it took me days to figure it out. I do it by performing these steps: 
 * First, create a hash with two keys `{good: [], bad: []}`
 * Get the hash of potential moves by calling `potential_moves`
 * Iterate through the hash of potential moves
@@ -130,7 +130,7 @@ The way I do thsi is simple, but it took me days to figure it out. I do it by pe
 
 >This is a dumbed down version of whats actually happening. I show you the code below and describe it in more detail. 
 
-Here is the code for the steps above. 
+Here is the code for the steps above: 
 ```Ruby
 #./lib/modules/board_modules/move_validation.rb
 
@@ -176,7 +176,7 @@ You are in Checkmate if...
 * Your teammates can't help you. (In other words, they cant come between the king and the attacker or take out the attacker)
 >These are almost the exact names that I use for the conditionals in the `check_mate?` method. 
 
-Heres how I coded check. 
+Here's how I coded check: 
 ```Ruby
 #./lib/classes/board.rb
 
@@ -193,7 +193,7 @@ def in_check?
     end
 ```
 
-and here is how I wrote check mate
+and here is how I wrote checkmate:
 
 ```Ruby
 #./lib/classes/board.rb
