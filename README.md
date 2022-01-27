@@ -1,4 +1,5 @@
 # Ruby Chess 
+![screen shot](https://github.com/BShowen/ruby_chess/blob/master/screenshot.gif "screen shot")
 ## Environment 
 Ruby 2.5.1\
 Mac OS 10.13.6\
