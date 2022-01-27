@@ -211,6 +211,6 @@ and here is how I wrote check mate
 
 # Thats it for now. 
 
-That is a lot to comprehend. Especially if you're fairly new to all of this, which I am (10/2/19). As I continue to study, code, and learn I will pop back in here and probably cringe at how bad this code is and then refactor it. Until then, its perfect :) 
+That is a lot to comprehend. Especially if you're fairly new to all of this, which I am. As I continue to study, code, and learn I will pop back in here and probably refactor it. Until then, its perfect.
 
 Thanks for checking it out!
