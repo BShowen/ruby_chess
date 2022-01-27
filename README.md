@@ -1,6 +1,6 @@
 # Ruby Chess 
-![screen shot](https://github.com/BShowen/ruby_chess/blob/master/screenshot.gif "screen shot")
-<img src="https://github.com/BShowen/ruby_chess/blob/master/screenshot.gif" width="200" height="200" />
+<!-- ![screen shot](https://github.com/BShowen/ruby_chess/blob/master/screenshot.gif "screen shot") -->
+<img src="https://github.com/BShowen/ruby_chess/blob/master/screenshot.gif" width="650" height="580" />
 ## Environment 
 Ruby 2.5.1\
 Mac OS 10.13.6\
