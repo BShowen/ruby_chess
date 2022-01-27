@@ -12,14 +12,14 @@ All dependancies will be automatically installed. Simply download this repo to y
 * All possible moves are highlighted when a piece is selected
     * legal moves are highlighted in green
     * a move that would put you in check/mate is highlighted in red
-* Human input validation
-    * prevents you from selecting opponents pieces
-    * prevents you from moving out of bounds 
+* User input validation
+    * prevents the user from selecting opponents pieces
+    * prevents the user from moving out of bounds 
     * prevents typos 
     * prevents the selection of an empty square
 * Custom error class 
     * for easy debugging while developing 
-    * mainly for printing out any mistakes for the human to read during gameplay e.g. selection of the wrong piece, why a move is illegal etc. 
+    * mainly for printing out any mistakes for the user to read during gameplay e.g. selection of the wrong piece, why a move is illegal etc. 
 * Serialization
     * You can save and load your game at anypoint. 
 * TO-DO
